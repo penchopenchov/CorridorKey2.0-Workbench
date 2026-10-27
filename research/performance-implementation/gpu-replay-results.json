@@ -1,0 +1,163 @@
+{
+  "baseline_revision": "9984b58",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "torch": "2.9.1+cu128",
+  "scope": "Stage 2; synthetic changing inputs; other models on CPU",
+  "shape_hw": [
+    2176,
+    3840
+  ],
+  "runs": {
+    "before": [
+      1003.3877000096254,
+      998.3233999810182,
+      1002.0156999817118,
+      991.4144999929704,
+      1039.2106999643147,
+      1001.3156000059098,
+      1020.1627000351436,
+      1000.0374999945052,
+      1040.6762000056915
+    ],
+    "cached_indices": [
+      988.0926000187173,
+      1001.1523000430316,
+      986.9518000050448,
+      1024.6090000146069,
+      990.005099971313,
+      999.8124999692664,
+      1101.661199994851,
+      1099.2909999913536,
+      995.4562999773771
+    ],
+    "cuda_graph": [
+      1004.5237000449561,
+      988.3415999938734,
+      1018.0673000286333,
+      989.9161000503227,
+      990.4512999928556,
+      1001.0732000228018,
+      1078.9793000440113,
+      998.055599979125,
+      988.7046000221744
+    ]
+  },
+  "comparisons": [
+    {
+      "iteration": 0,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 0,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 1,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 1,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 2,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 2,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 3,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 3,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 4,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 4,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 5,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 5,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 6,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 6,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 7,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 7,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 8,
+      "backend": "cached_indices",
+      "changed_values": 0,
+      "max_abs": 0.0
+    },
+    {
+      "iteration": 8,
+      "backend": "cuda_graph",
+      "changed_values": 0,
+      "max_abs": 0.0
+    }
+  ],
+  "graph_setup_seconds": 3.100773099984508,
+  "peak_with_graph_gib": 3.0947422981262207,
+  "median_ms": {
+    "before": 1002.0156999817118,
+    "cached_indices": 999.8124999692664,
+    "cuda_graph": 998.055599979125
+  },
+  "index_cache_entries": 21
+}

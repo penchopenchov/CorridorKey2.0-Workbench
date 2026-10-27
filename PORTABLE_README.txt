@@ -59,7 +59,11 @@ LINEAR REC.709 PRORES 4444
 4. Select No matte, First-frame matte, or Full matte video/sequence.
 5. Choose video export or EXR export and the outputs you want.
 6. For video cutout, choose sRGB output or linear Rec.709 output independently.
-7. Choose memory, frame limit, output folder and temporary cache location.
+7. Choose memory and GPU speed/quality settings. cuDNN attention defaults ON
+   and warns that quality may degrade. OFF restores reference attention.
+   Advanced GPU preprocessing, feature reuse and native-convolution choices
+   default OFF; they can change quality too. Then choose the frame limit,
+   output folder and temporary cache location.
 8. Review the settings, then start processing.
 
 ProRes 4444 alone does not establish the input transfer function. Option 3 is

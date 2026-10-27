@@ -55,13 +55,15 @@ Full override the range. Incorrect levels can crush blacks or alter contrast.
 Precision path:
 - OpenCV probes metadata only; the launcher does not feed its 8-bit video
   decode into the model for this guided workflow.
-- FFmpeg decodes video into float RGB EXRs while handling the matrix/range.
+- FFmpeg streams float RGB video while handling the matrix/range. Normal source
+  videos do not require whole-clip temporary EXRs; hint/sequence preparation can.
 - Transfer is held linear on both sides of zscale during that decode, avoiding
   zimg's different display-EOTF interpretation of a BT.709 transfer tag.
 - Explicit sRGB or inverse BT.709 equations are applied once to float RGB.
 - Linear Rec.709 gets no further gamma conversion.
-- infer.py receives --frame_dir_linear and the source FPS, so the already
-  linear frame data is not gamma-decoded a second time.
+- infer.py receives explicit video color/range settings for that stream.
+  Prepared frame sequences receive --frame_dir_linear and the source FPS, so
+  already linear frame data is not gamma-decoded a second time.
 - Native dimensions and selected leading-frame ordering are retained. Source
   fractional FPS is probed and forwarded. Variable-frame-rate timestamp
   preservation has not been added; use an appropriate constant-FPS source.
@@ -139,16 +141,38 @@ low-VRAM staging and Hann chunk/stride. On a 16 GB card, 4K commonly needs
 low-VRAM mode and smaller windows. If memory fails, close other GPU apps and
 try 8/4, 4/2 or 1/1. Smaller temporal windows sacrifice context.
 
-The source decode writes float EXRs to a generated job cache. This can consume
-substantial disk space for long/high-resolution clips. Choose a fast cache
-drive with enough room. Selected leading-frame limits reduce decode/model
-work. Job EXRs and low-VRAM feature files are cleaned after success, failure
+Normal source video streams float frames through bounded buffers. Prepared
+image sequences, hints and low-VRAM feature staging can still consume substantial
+temporary space. Choose a fast cache drive with enough room. Leading-frame
+limits reduce decode/model work. Job caches are cleaned after success, failure
 or cancellation. Output files remain at the chosen destination.
+
+GPU speed/quality selections:
+- Faster cuDNN attention defaults ON in the guided launcher and direct CLI.
+  Quality may degrade: matte edges and foreground color can change. First use
+  at a resolution adds setup time; short clips may be slower. OFF uses the
+  reference attention policy. Other supported kernels remain fallback options.
+- Advanced options default OFF. GPU video preprocessing changes rounding and
+  uses more VRAM; image sequences retain CPU preprocessing. Foundation-feature
+  reuse changes batch shapes and applies only in normal VRAM mode. Native
+  Stage 2 convolutions can improve speed on some GPUs but change predictions.
+- For previous numerical results, turn cuDNN OFF and leave all advanced speed
+  options OFF. Color/range, hints, temporal windows, output formats and encoder
+  settings remain independent choices. Back navigation and batch model reuse
+  remain supported. Compare test exports before accepting a tradeoff.
+- The settings text file and performance JSON record the selected options.
+  The library InferenceConfig keeps reference defaults for regression tools;
+  the CLI explicitly supplies its user-facing cuDNN default.
+
+Direct flags: --stage2_attention cudnn (CLI default), or
+--stage2_attention default for reference attention; optional
+--preprocess_device cuda, --cache_foundations, --stage2_native_convolutions.
 
 CPU preparation threads default to Auto (FFmpeg's thread count 0). Manual
 accepts 1 through the detected logical CPU count; Conservative retains the
-previous 2-thread setting. The same selection applies to EXR encoding for
-source videos and full-matte videos. It is shown in the settings review and
+previous 2-thread setting. The selection applies where temporary EXR encoding
+is required, including full-matte videos; normal source video streams instead.
+It is shown in the settings review and
 saved as preparation_threads in launcher_settings.json (0 means Auto).
 
 This controls the EXR encoder, not a hard limit on the process's total CPU

@@ -1,0 +1,24 @@
+{
+  "torch": "2.9.1+cu128",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "shape_hw": [
+    2176,
+    3840
+  ],
+  "scope": "Stage 2 only; other model weights on CPU; synthetic inputs",
+  "available": {
+    "triton": false,
+    "onnx": false,
+    "onnxruntime": false,
+    "tensorrt": false,
+    "torch_tensorrt": false
+  },
+  "flash_attention": false,
+  "runs": [
+    {
+      "backend": "cuda_graph",
+      "capture_inner_error": "Traceback (most recent call last):\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\research\\performance-implementation\\benchmark_gpu_backends.py\", line 96, in <module>\n    output=stage(static_rgb,static_baton)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\runtime\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1775, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\runtime\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1786, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\corridorkey\\stage2.py\", line 508, in forward\n    x = run_block(blk, x)\n        ^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\corridorkey\\stage2.py\", line 504, in run_block\n    return blk(x_in)\n           ^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\runtime\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1775, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\runtime\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1786, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\corridorkey\\blocks.py\", line 2627, in forward\n    x = self.attn(x, region_groups=region_groups)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\runtime\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1775, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\runtime\\Lib\\site-packages\\torch\\nn\\modules\\module.py\", line 1786, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\corridorkey\\blocks.py\", line 1135, in forward\n    attn = _sdpa_with_region_groups(q, k, v, *region_groups)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\corridorkey\\blocks.py\", line 899, in _sdpa_with_region_groups\n    win_idx = _batched_windows(full_idx)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\teoma\\Documents\\AI\\CorridorKey 2.0\\corridorkey\\blocks.py\", line 890, in _batched_windows\n    idx = torch.tensor(base, device=q.device, dtype=torch.long)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.AcceleratorError: CUDA error: operation not permitted when stream is capturing\nSearch for `cudaErrorStreamCaptureUnsupported' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n\n",
+      "error": "AcceleratorError: CUDA error: operation failed due to a previous error during capture\nSearch for `cudaErrorStreamCaptureInvalidated' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n"
+    }
+  ]
+}

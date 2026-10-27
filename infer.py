@@ -53,8 +53,10 @@ def main(argv=None, model=None):
                     help='Use the original staged CPU intermediate path for numerical comparisons.')
     ap.add_argument('--cache_foundations', action='store_true',
                     help='Experimental: reuse frozen features across Hann windows; smaller batches can change numerical rounding.')
-    ap.add_argument('--stage2_attention', choices=('default', 'efficient', 'cudnn'), default='default',
-                    help='Optional Stage 2 SDPA backend experiment; default preserves reference selection.')
+    ap.add_argument('--stage2_attention', choices=('default', 'efficient', 'cudnn'), default='cudnn',
+                    help='Default: cudnn (faster on long clips; quality may degrade). Use default for reference PyTorch attention.')
+    ap.add_argument('--stage2_native_convolutions', action='store_true',
+                    help='Opt-in native PyTorch convolutions for Stage 2; hardware-dependent speedup, quality may degrade.')
     ap.add_argument('--compile_stage2', choices=('none', 'default', 'reduce-overhead', 'max-autotune'), default='none',
                     help='Optional compilation experiment; falls back to eager if the compiler is unavailable.')
     ap.add_argument("--hint_first_frame", default=None,
@@ -158,6 +160,7 @@ def main(argv=None, model=None):
         resident_buffers=not args.reference_pipeline,
         cache_foundations=args.cache_foundations,
         stage2_attention=args.stage2_attention,
+        stage2_native_convolutions=args.stage2_native_convolutions,
         compile_stage2=args.compile_stage2,
         hann_chunk=hann_chunk,
         hann_stride=hann_stride,
@@ -189,6 +192,8 @@ def main(argv=None, model=None):
         output_format=args.output_format,
         exr_dtype=args.exr_dtype,
     )
+    if args.stage2_attention=='cudnn' or args.stage2_native_convolutions or args.preprocess_device=='cuda' or args.cache_foundations:
+        print('Speed/quality tradeoffs enabled: quality may degrade; numerical results can differ from the reference path.',flush=True)
     if model is None:
         with Progress('Loading model', unit=None):
             model = load_model(paths, device="cuda")

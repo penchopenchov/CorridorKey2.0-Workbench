@@ -7,7 +7,7 @@ import sys
 import tempfile
 import time
 import warnings
-from contextlib import nullcontext
+from contextlib import ExitStack, contextmanager
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -111,6 +111,7 @@ class InferenceConfig:
     resident_buffers: bool = True
     cache_foundations: bool = False
     stage2_attention: str = 'default'
+    stage2_native_convolutions: bool = False
     compile_stage2: str = 'none'
     hann_chunk: int = 80
     hann_stride: int = 40
@@ -303,7 +304,8 @@ def _stage2_forward(model, rgb, baton, cfg):
     """Optional backend experiments; eager/default remains the quality baseline."""
     target = model.stage2
     cache = model.__dict__.setdefault('_compiled_stage2_cache', {})
-    key = (cfg.compile_stage2, cfg.stage2_attention, tuple(rgb.shape), rgb.dtype, rgb.device)
+    key = (cfg.compile_stage2, cfg.stage2_attention, cfg.stage2_native_convolutions,
+           cfg.low_vram, tuple(rgb.shape), rgb.dtype, rgb.device)
     if cfg.compile_stage2 != 'none':
         if key not in cache:
             if importlib.util.find_spec('triton') is None:
@@ -316,15 +318,27 @@ def _stage2_forward(model, rgb, baton, cfg):
                     warnings.warn('Stage 2 compiler initialization failed; using eager execution.')
                     cache[key] = None
         target = cache[key] or model.stage2
-    def attention_context():
-        if cfg.stage2_attention == 'default':
-            return nullcontext()
-        from torch.nn.attention import sdpa_kernel, SDPBackend
-        backend = {'efficient': SDPBackend.EFFICIENT_ATTENTION,
-                   'cudnn': SDPBackend.CUDNN_ATTENTION}[cfg.stage2_attention]
-        return sdpa_kernel(backend)
+    @contextmanager
+    def execution_context():
+        with ExitStack() as stack:
+            from torch.nn.attention import sdpa_kernel, SDPBackend
+            if cfg.stage2_attention == 'cudnn':
+                # Prefer cuDNN while allowing supported kernels on other GPUs,
+                # attention masks and low-memory query shapes.
+                stack.enter_context(sdpa_kernel([
+                    SDPBackend.CUDNN_ATTENTION, SDPBackend.FLASH_ATTENTION,
+                    SDPBackend.EFFICIENT_ATTENTION, SDPBackend.MATH],set_priority=True))
+            elif cfg.stage2_attention == 'efficient':
+                stack.enter_context(sdpa_kernel(SDPBackend.EFFICIENT_ATTENTION))
+            if cfg.stage2_native_convolutions:
+                stack.enter_context(torch.backends.cudnn.flags(
+                    enabled=False,benchmark=torch.backends.cudnn.benchmark,
+                    benchmark_limit=torch.backends.cudnn.benchmark_limit,
+                    deterministic=torch.backends.cudnn.deterministic,
+                    allow_tf32=torch.backends.cudnn.allow_tf32))
+            yield
     try:
-        with attention_context():
+        with execution_context():
             return target(rgb, baton)
     except torch.cuda.OutOfMemoryError:
         raise
@@ -333,7 +347,7 @@ def _stage2_forward(model, rgb, baton, cfg):
             raise
         warnings.warn('Stage 2 compilation failed; using eager execution for this shape.')
         cache[key] = None
-        with attention_context():
+        with execution_context():
             return model.stage2(rgb, baton)
 
 
@@ -919,6 +933,10 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
                 sf.write(f"Carry Hint: {cfg.carry_hint}\n")
                 sf.write(f"Carry Hint Quality: {cfg.carry_hint_quality}\n")
                 sf.write(f"Despill Strength: {cfg.despill_strength}\n")
+                sf.write(f"Stage 2 Attention: {cfg.stage2_attention}\n")
+                sf.write(f"Stage 2 Native Convolutions: {cfg.stage2_native_convolutions}\n")
+                sf.write(f"Preprocessing Device: {cfg.preprocess_device}\n")
+                sf.write(f"Reuse Foundation Features: {cfg.cache_foundations}\n")
                 sf.write(f"Cutout Linear: {cfg.cutout_linear}\n")
                 sf.write(f"Frame Dir Linear: {cfg.frame_dir_linear}\n")
                 sf.write(f"Hann Chunk: {cfg.hann_chunk}\n")
@@ -1062,6 +1080,7 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
                        cache_foundations=cfg.cache_foundations,
                        preprocess_device=cfg.preprocess_device,
                        stage2_attention=cfg.stage2_attention, compile_stage2=cfg.compile_stage2,
+                       stage2_native_convolutions=cfg.stage2_native_convolutions,
                        peak_allocated_gib=torch.cuda.max_memory_allocated() / 2**30,
                        torch=torch.__version__, gpu=torch.cuda.get_device_name())
     with open(os.path.join(output_dir, f'{clip_name}_performance.json'), 'w') as stream:

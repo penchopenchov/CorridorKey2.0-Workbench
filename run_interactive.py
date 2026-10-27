@@ -216,6 +216,18 @@ def prompt_input(prompt_str, default=None, validator=None):
             continue
         return val
 
+def prompt_gpu_speed_args():
+    choice = prompt_choices('GPU attention - quality may degrade', [
+        'ON - faster cuDNN attention (default; may change matte/foreground)',
+        'OFF - reference PyTorch attention',
+    ], default=1)
+    print('First use at a resolution can add startup time. Quality may degrade with faster kernels.')
+    args = ['--stage2_attention', 'cudnn' if choice == 1 else 'default']
+    if prompt_confirm('Use native Stage 2 convolutions? Opt-in; quality may degrade.', default=False):
+        args.append('--stage2_native_convolutions')
+    return args
+
+
 def prompt_hann_window():
     window_choice = prompt_choices(
         "Select Hann Window Presets (Temporal Context):",
@@ -410,6 +422,7 @@ def main():
             if custom_temp:
                 temp_dir = clean_path(prompt_input("Enter cache directory path:"))
 
+        speed_args = prompt_gpu_speed_args()
         # Advanced options
         customize_advanced = prompt_confirm("Customize advanced settings (output folder name, frame limits)?", default=False)
         
@@ -522,6 +535,7 @@ def main():
                 else:
                     cmd.extend(["--carry_hint_quality", str(carry_hint_quality)])
                     
+            cmd.extend(speed_args)
             cmd.extend(["--outputs"] + outputs)
             if cutout_linear:
                 cmd.append("--cutout_linear")
@@ -751,6 +765,7 @@ def main():
             if custom_temp:
                 temp_dir = clean_path(prompt_input("Enter cache directory path:"))
 
+        speed_args = prompt_gpu_speed_args()
         # 7. Advanced options
         customize_advanced = prompt_confirm("Customize advanced settings (output folder name, frame limits)?", default=False)
         
@@ -885,6 +900,7 @@ def main():
                 else:
                     cmd.extend(["--carry_hint_quality", str(carry_hint_quality)])
                     
+            cmd.extend(speed_args)
             cmd.extend(["--outputs"] + outputs)
             if cutout_linear:
                 cmd.append("--cutout_linear")

@@ -44,13 +44,18 @@ The final review offers Start, Back and Cancel. Processing begins at Start.
 8. For video cutout, choose OUTPUT color separately: straight sRGB for standard
    editing, or straight linear Rec.709 for your linear compositing pipeline.
    EXR output is always linear. Keep despill at 0.5 initially.
-9. Keep GPU memory on Auto. CPU preparation threads also default to Auto:
-   FFmpeg chooses how many threads encode the temporary EXR frames. Manual
-   lets you choose a count; Conservative uses the previous 2-thread setting.
+9. Keep GPU memory on Auto. Faster cuDNN attention defaults to ON:
+   quality may degrade, including changes to matte edges and foreground color.
+   Choose OFF for reference results. Its first use adds setup time.
+   Additional experimental speed options default OFF: GPU video preprocessing,
+   foundation-feature reuse, and native Stage 2 convolutions. Each may change
+   quality. Leave them OFF initially and compare a short test before enabling.
+   CPU preparation threads default to Auto and apply to temporary EXR encoding
+   where needed; ordinary source video now streams without a whole-clip EXR pass.
    For a first test, enter a frame limit of 24 or 48.
 10. Choose an output parent and a temporary-cache drive, or accept defaults.
     The default output is out_CLIPNAME beside the source clip. Long 4K shots
-    need substantial temporary disk space for decoded float frames.
+    can need substantial temporary disk space for hints and low-VRAM features.
 11. If using a matte, confirm a discovered companion or drag in your mask path
     when asked. Then review the settings and confirm Start.
 
@@ -70,8 +75,9 @@ worker still running after its launcher was closed.
 If deletion fails, the launcher prints the retained path and retries it on a
 later launch. Only caches registered by this version are eligible for recovery;
 unrecognized folders, source footage, exports and model assets are left alone.
-No nightly task is required. Large temporary caches are still needed DURING
-processing; choose a cache drive with enough free space for long shots.
+No nightly task is required. Normal video streams through bounded frame
+buffers; sequence/hint preparation and low-VRAM features can still need large
+temporary caches during processing. Choose a cache drive with enough space.
 
 Auto CPU preparation threading is a decoding-stage optimization: the fork
 owner reported significantly faster Decoding source on a 16-thread Ryzen

@@ -52,6 +52,10 @@ class Settings:
     output_root: Path | None = None
     cache_root: Path = field(default_factory=lambda: Path(tempfile.gettempdir()) / 'corridorkey_launcher')
     preparation_threads: int = 0  # FFmpeg's automatic EXR encoder thread selection.
+    stage2_attention: str = 'cudnn'
+    stage2_native_convolutions: bool = False
+    preprocess_device: str = 'cpu'
+    cache_foundations: bool = False
 
 
 @dataclass
@@ -192,6 +196,20 @@ def prompt_settings(*, has_sequences, menu=None):
             settings.hann_stride = menu.text('hann_stride', 'Enter Hann Stride (positive integer)', default='24', validator=positive_int)
         else:
             settings.hann_chunk, settings.hann_stride = {1: (48, 24), 2: (24, 12), 3: (8, 4), 4: (80, 40)}[window]
+    menu.note('\nGPU speed / quality')
+    attention=menu.choices('stage2_attention','Faster cuDNN attention:',[
+        'ON - faster on long clips; quality may degrade',
+        'OFF - reference PyTorch attention, preserves prior results',
+    ])
+    settings.stage2_attention='cudnn' if attention==1 else 'default'
+    menu.note('cuDNN may change matte edges and foreground. First use at a resolution can add startup time.')
+    if menu.confirm('advanced_speed','Show additional experimental speed options (quality may degrade)?',default=False):
+        settings.preprocess_device=('cuda' if menu.confirm('gpu_preprocess',
+            'GPU video preprocessing? Faster preparation, different rounding; quality may degrade. Image sequences still use CPU.',default=False) else 'cpu')
+        settings.cache_foundations=menu.confirm('cache_foundations',
+            'Reuse foundation features? No measured export gain in our short test; quality may degrade. Normal VRAM mode only.',default=False)
+        settings.stage2_native_convolutions=menu.confirm('stage2_native_convolutions',
+            'Native PyTorch convolutions for Stage 2? Hardware-dependent speedup; quality may degrade.',default=False)
     logical_cpus = os.cpu_count() or 1
     preparation = menu.choices('preparation', 'CPU preparation threads:', [
         f'Auto - let FFmpeg choose ({logical_cpus} logical CPUs detected)',
@@ -412,7 +430,13 @@ def inference_command(prepared, hint, output_dir, settings, ffmpeg, feature_cach
                '--output_dir', str(output_dir), '--frame_dir_fps', str(prepared.fps),
                '--ffmpeg_bin', str(ffmpeg), '--output_format', settings.output_format,
                '--exr_dtype', settings.exr_dtype, '--despill_strength', str(settings.despill_strength),
+               '--stage2_attention',settings.stage2_attention,
+               '--preprocess_device',settings.preprocess_device,
                '--outputs', *settings.outputs]
+    if settings.cache_foundations:
+        command.append('--cache_foundations')
+    if settings.stage2_native_convolutions:
+        command.append('--stage2_native_convolutions')
     if prepared.path.is_dir():
         command += ['--frame_dir_linear']
     else:
@@ -469,6 +493,9 @@ def prompt_run(paths, menu):
     menu.note(f'Input color: {COLOR_LABELS[settings.input_color]} | Video levels: {settings.input_range}')
     menu.note(f'Matte: {settings.hint_mode} | Confidence: {settings.hint_quality:g} | Output: {settings.output_format} | Files: {", ".join(settings.outputs)}')
     menu.note('Cutout color: ' + ('Linear Rec.709' if settings.output_format == 'exr' or settings.cutout_linear else 'sRGB'))
+    menu.note(f'GPU attention: {settings.stage2_attention} | GPU preprocessing: {settings.preprocess_device} | Feature reuse: {settings.cache_foundations} | Native convolutions: {settings.stage2_native_convolutions}')
+    if settings.stage2_attention=='cudnn' or settings.preprocess_device=='cuda' or settings.cache_foundations or settings.stage2_native_convolutions:
+        menu.note('Speed/quality tradeoffs enabled: quality may degrade. Turn OFF cuDNN and leave advanced options OFF for reference results.')
     thread_label = 'Auto (FFmpeg chooses)' if settings.preparation_threads == 0 else str(settings.preparation_threads)
     menu.note(f'CPU preparation threads: {thread_label}')
     menu.note(f'Frames: {settings.num_frames if settings.num_frames > 0 else "all"} | Cache: {settings.cache_root}')

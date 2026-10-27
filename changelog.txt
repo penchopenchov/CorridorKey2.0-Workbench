@@ -1,5 +1,24 @@
 CORRIDORKEY 2.0 - DETAILED LOCAL CHANGELOG
 =======================================
+Update: 2026-10-27 - GPU speed/quality choices
+
+- Guided and legacy launchers offer cuDNN attention ON/OFF, default ON at the
+  user's request, explicitly warning that quality may degrade. Direct infer.py
+  also defaults to cuDNN; --stage2_attention default restores reference policy.
+- Advanced guided choices default OFF: GPU video preprocessing, native Stage 2
+  convolutions and experimental feature reuse. Backend flags are scoped and
+  restored; supported attention fallbacks remain enabled. Settings are logged.
+- Warm 12-frame 4K alpha/foreground exports measured 43.50 s reference versus
+  38.30 s with all optional speed choices, with changed numerical predictions.
+  Feature reuse alone showed no meaningful benefit in this short test.
+- CUDA Graph replay and convolution autotuning had no convincing gain and were
+  not shipped. No runtime dependency, model, resolution or encoder change.
+- 32 tests and seven actual guided jobs passed. Reference files match byte for
+  byte before/after options and low-memory transitions; one model load reused.
+- See research/performance-implementation/GPU_BACKENDS.md for measurements,
+  numerical differences, startup costs and limitations.
+
+Original portable-package work follows:
 Date: 2026-10-21
 Upstream: https://github.com/nikopueringer/CorridorKey2.0
 Baseline Git revision: 485f5e9ab759ead6138cc990776184b59d6ea971

@@ -1,0 +1,46 @@
+{
+  "torch": "2.9.1+cu128",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "shape_hw": [
+    2176,
+    3840
+  ],
+  "scope": "Stage 2 only; other model weights on CPU; synthetic inputs",
+  "available": {
+    "triton": false,
+    "onnx": false,
+    "onnxruntime": false,
+    "tensorrt": false,
+    "torch_tensorrt": false
+  },
+  "flash_attention": false,
+  "runs": [
+    {
+      "backend": "cudnn_attention",
+      "first_use_seconds": 8.188439699995797,
+      "initial_comparison": {
+        "changed_values": 24718985,
+        "values": 33423360,
+        "max_abs": 0.03125,
+        "finite": true
+      },
+      "wall_ms": [
+        883.2762999809347,
+        884.8289000452496,
+        894.3091999972239,
+        948.1160999857821,
+        1047.5989999831654,
+        1021.4016000390984,
+        968.2561999652535
+      ],
+      "median_ms": 948.1160999857821,
+      "peak_allocated_gib": 3.2477645874023438,
+      "changed_input_comparison": {
+        "changed_values": 30491750,
+        "values": 33423360,
+        "max_abs": 0.006103515625,
+        "finite": true
+      }
+    }
+  ]
+}

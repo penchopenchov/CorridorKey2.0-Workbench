@@ -2,6 +2,13 @@
 
 Implementation date: October 26, 2026. Original application baseline: `2280434` (research snapshot `6f987fa`). Working branch: `codex/cli-performance`.
 
+**October 27 update:** This report's exact-quality results describe the reference
+attention configuration. The user subsequently requested a labeled cuDNN
+speed/quality selection, default ON in the CLI, plus additional opt-ins. Those
+settings can change predictions. For current defaults, tradeoffs, measurements
+and compatibility checks, see [GPU_BACKENDS.md](GPU_BACKENDS.md). Turn cuDNN OFF
+and leave advanced speed choices OFF to reproduce the earlier reference results.
+
 ## Result
 
 On this RTX 3090 installation, the tested 12-frame 4K export fell from **85.82 seconds to 44.99 seconds**, excluding model loading: **47.6% less time, or 1.91× throughput** for this short workload. Adding the measured model-load cost gives approximately **102.10 seconds versus 61.28 seconds**. Those cold-equivalent figures add a common measured load cost; they are not independent cold-cache command measurements.

@@ -19,15 +19,36 @@ boundaries and encoding defaults are preserved.
 Direct CLI users can select the same float input path with
 `--video_decoder ffmpeg --input_color srgb --input_range auto`; the legacy
 OpenCV direct-CLI input path remains the default for compatibility. Use
-`--reference_pipeline` to compare the original CPU/memmap intermediate path.
+`--reference_pipeline --stage2_attention default` to compare the original CPU/memmap intermediate path.
 Each completed inference writes a `*_performance.json` summary beside outputs.
 
-The optional `--preprocess_device cuda`, `--cache_foundations`,
-`--stage2_attention cudnn`, and `--compile_stage2 default` are experiments:
-they can change numerical rounding and are **disabled by default**. Compilation
-requires a compatible compiler environment and falls back to eager if unavailable.
+The guided launcher now asks **Faster cuDNN attention: ON/OFF**, default **ON**.
+Direct `infer.py` also defaults to `--stage2_attention cudnn`. This is a
+speed/quality tradeoff: **quality may degrade**, including changes to matte
+edges and foreground color. First use at a resolution adds setup time, so very
+short clips may take longer. OFF / `--stage2_attention default` restores the
+reference attention policy. Supported PyTorch kernels remain available as
+fallbacks when cuDNN cannot handle an attention shape.
+
+The advanced speed choices are opt-in and default **OFF**:
+
+- `--preprocess_device cuda`: GPU float-video preprocessing; different rounding,
+  extra VRAM, and possible quality changes. Image sequences still use CPU preprocessing.
+- `--cache_foundations`: reuse frozen features in normal-memory inference;
+  different batch shapes can change predictions. Low-VRAM staging does not use this cache.
+- `--stage2_native_convolutions`: use native PyTorch convolutions for Stage 2;
+  measured faster on this RTX 3090, but numerical output and hardware performance differ.
+
+All advanced choices warn that quality may degrade. Leave them OFF and turn
+cuDNN attention OFF to retain prior numerical results. Source color/range,
+hints, outputs, EXR precision, cutout color, despill, memory settings, Back
+navigation and model reuse remain supported. Choices are saved with exports.
+`--compile_stage2 default` remains a separate explicit experiment, requires a
+compatible compiler environment and falls back to eager if unavailable.
+No additional dependencies are required by the new selections.
 See the [measured implementation report](research/performance-implementation/RESULTS.md)
-for benchmark conditions, exact-output checks and limitations.
+and [GPU backend report](research/performance-implementation/GPU_BACKENDS.md)
+for benchmark conditions, numerical differences and limitations.
 
 Welcome to CorridorKey 2.0! You may rest easy, weary artist. The green beast has been slain. The CorridorKey 2.0 model was designed and trained by Zachary Harris, in direct collaboration with Niko and Corridor Digital.
 

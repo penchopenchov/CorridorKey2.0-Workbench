@@ -1,0 +1,117 @@
+{
+  "model_loads": 1,
+  "same_model": true,
+  "reference_encoded_files_identical_before_after": true,
+  "cases": [
+    {
+      "case": "reference_before",
+      "completed": true,
+      "frames": 4,
+      "settings": {
+        "stage2_attention": "default"
+      },
+      "video_sha256": {
+        "alpha": "63ad74f619928da37bb9cee6546160d251af3c54a26376f5f48c2bc9342fb307",
+        "fg": "1c9a7e7a3df4e04f06f9788f82135fd3da78bfcd5ecc861eaecaf8fe7c36896d",
+        "cutout": "09e6ea1f16e4c9da8f1d0c4800107eabfbfab4556f4418d97532c8dc12a80670",
+        "checker": "5fee50bdd07f1fe83f008042bd96c0d7a5e344c6a08049940a5d84c680cbd14b"
+      }
+    },
+    {
+      "case": "default_cudnn",
+      "completed": true,
+      "frames": 4,
+      "settings": {},
+      "video_sha256": {
+        "alpha": "46a496a2a89c889dbf5c91e8d0c2b1f5be46dcb517adb50e477db60aee8202be",
+        "fg": "d6666d9e69c7a90801f727ebdf0246ac59a22bfd987a9915db46ecef836f60d6",
+        "cutout": "c5f2230eda3d3cd24fbbcf64ae6f5a1a8b55b4f072f5c5637aaf7da245f51367",
+        "checker": "900a200f33180aa0ef03d575e1d72b8c4067c7f619eefe2482e51d4017d89464"
+      }
+    },
+    {
+      "case": "all_speed_full_hint",
+      "completed": true,
+      "frames": 4,
+      "settings": {
+        "hint_mode": "full",
+        "authoritative": true,
+        "preprocess_device": "cuda",
+        "cache_foundations": true,
+        "stage2_native_convolutions": true,
+        "cutout_linear": true,
+        "despill_strength": 0.7
+      },
+      "video_sha256": {
+        "alpha": "1dfe27560c543959e7388575599743af3ce680d336d23e58d48f13514d0758bd",
+        "fg": "15480603c986dfc20f8ef98750283b38b8590f7534126b2d8f9b42844d056bcd",
+        "cutout": "e4a60afce51e9baecf99c19e64538a6ad5d66d90f0c6b41ee6b566c91a7e6050",
+        "checker": "9507ba3e4388cc9466486b9afbef58a9447d81ca183e06632a601f3b5ffefcfc"
+      }
+    },
+    {
+      "case": "low_video_all_speed",
+      "completed": true,
+      "frames": 4,
+      "settings": {
+        "hint_mode": "full",
+        "authoritative": true,
+        "low_vram": true,
+        "preprocess_device": "cuda",
+        "cache_foundations": true,
+        "stage2_native_convolutions": true
+      },
+      "video_sha256": {
+        "alpha": "31615bd74b2a4aa4fd4b81e747a642c1b63ff0a8a1266b0b7e6908919c1b15db",
+        "fg": "6cd7e054cfd35926500772fb311bc482c24dcaf8e12b8ca4437fa30c49fa62ee",
+        "cutout": "083411da5cb85ccd3dbf80cb510f1851f0540b268a3273f5d53cb4c7f0642c0f",
+        "checker": "7ae91ab4912399922b8ee9c47e9bc475f869342bdad010ba47a0f43550eee04d"
+      }
+    },
+    {
+      "case": "low_hdr_first_float",
+      "completed": true,
+      "frames": 13,
+      "settings": {
+        "hint_mode": "first",
+        "input_color": "linear",
+        "low_vram": true,
+        "output_format": "exr",
+        "exr_dtype": "float",
+        "sequence_fps": 23.976,
+        "stage2_native_convolutions": true,
+        "preprocess_device": "cuda"
+      },
+      "video_sha256": {}
+    },
+    {
+      "case": "hdr_full_half",
+      "completed": true,
+      "frames": 13,
+      "settings": {
+        "hint_mode": "full",
+        "authoritative": true,
+        "input_color": "linear",
+        "output_format": "exr",
+        "exr_dtype": "half",
+        "sequence_fps": 23.976,
+        "cache_foundations": true
+      },
+      "video_sha256": {}
+    },
+    {
+      "case": "reference_after",
+      "completed": true,
+      "frames": 4,
+      "settings": {
+        "stage2_attention": "default"
+      },
+      "video_sha256": {
+        "alpha": "63ad74f619928da37bb9cee6546160d251af3c54a26376f5f48c2bc9342fb307",
+        "fg": "1c9a7e7a3df4e04f06f9788f82135fd3da78bfcd5ecc861eaecaf8fe7c36896d",
+        "cutout": "09e6ea1f16e4c9da8f1d0c4800107eabfbfab4556f4418d97532c8dc12a80670",
+        "checker": "5fee50bdd07f1fe83f008042bd96c0d7a5e344c6a08049940a5d84c680cbd14b"
+      }
+    }
+  ]
+}
