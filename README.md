@@ -1,4 +1,4 @@
-# CorridorKey 2.0 · Portable CLI
+# CorridorKey2.0 Workbench
 
 A Windows-focused CorridorKey fork for guided video keying, explicit color handling, artist-supplied mattes, HDR exports, and faster batch processing.
 
@@ -44,8 +44,8 @@ The BAT prefers `runtime/python.exe` and falls back to the local `venv`. A fully
 You need Git, Python 3.11 for Windows x64, an NVIDIA GPU/driver compatible with the bundled CUDA PyTorch, and internet access for setup. The script prints installation guidance if Python 3.11 is missing.
 
 ```powershell
-git clone https://github.com/penchopenchov/CorridorKey2.0-Portable.git
-cd CorridorKey2.0-Portable
+git clone https://github.com/penchopenchov/CorridorKey2.0-Workbench.git
+cd CorridorKey2.0-Workbench
 .\setup_portable.bat
 ```
 

@@ -1,4 +1,4 @@
-CORRIDORKEY 2.0 PORTABLE - START HERE
+CorridorKey2.0 Workbench - START HERE
 ===================================
 
 COPY THIS WHOLE FOLDER TO YOUR OTHER PC

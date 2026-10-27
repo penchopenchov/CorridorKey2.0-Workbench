@@ -524,7 +524,7 @@ def recover_caches(cache_root):
 def main(argv=None):
     if os.name == 'nt':
         os.system('')
-    print_header('CorridorKey 2.0 - guided color and matte setup')
+    print_header('CorridorKey2.0 Workbench - guided color and matte setup')
     try:
         paths = sys.argv[1:] if argv is None else argv
         if not all(path.strip() for path in paths):

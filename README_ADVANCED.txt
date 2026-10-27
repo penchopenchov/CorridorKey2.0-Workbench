@@ -1,4 +1,4 @@
-CORRIDORKEY 2.0 PORTABLE - ADVANCED GUIDE
+CorridorKey2.0 Workbench - ADVANCED GUIDE
 =======================================
 
 1. PACKAGE LAYOUT AND PORTABILITY

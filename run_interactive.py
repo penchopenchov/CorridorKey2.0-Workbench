@@ -250,7 +250,7 @@ def prompt_hann_window():
 def main():
     if os.name == "nt":
         os.system("")  # enables ANSI colors in the Windows console
-    print_header("CorridorKey v2 Interactive Runner")
+    print_header("CorridorKey2.0 Workbench - Interactive Runner")
     
     # 1. Resolve Input Path
     input_path_str = ""

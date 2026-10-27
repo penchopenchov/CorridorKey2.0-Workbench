@@ -1,5 +1,5 @@
-CorridorKey 2.0 - portable Windows installation
-=============================================
+CorridorKey2.0 Workbench - portable Windows installation
+======================================================
 
 The repository folder is also the runnable installation. Application source,
 runtime/, weights/, vfms/ and ffmpeg.exe live together at the root; there is
