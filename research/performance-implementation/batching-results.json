@@ -1,0 +1,71 @@
+{
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "torch": "2.9.1+cu128",
+  "native_hw": [
+    2160,
+    3840
+  ],
+  "padded_hw": [
+    2176,
+    3840
+  ],
+  "scope": "Stage 2 only; other models on CPU; synthetic RGB/baton repeated",
+  "runs": [
+    {
+      "batch": 1,
+      "wall_ms": [
+        1346.0207000025548,
+        1003.9559999713674,
+        1000.632899987977,
+        1030.5618999991566
+      ],
+      "warm_median_ms_per_frame": 1003.9559999713674,
+      "peak_allocated_gib": 3.3094701766967773,
+      "changed_values": 0,
+      "max_abs": 0.0,
+      "finite": true
+    },
+    {
+      "batch": 2,
+      "wall_ms": [
+        2014.4940000027418,
+        2025.8732000365853,
+        1997.528499981854,
+        2032.2102999780327
+      ],
+      "warm_median_ms_per_frame": 1012.9366000182927,
+      "peak_allocated_gib": 5.671379089355469,
+      "changed_values": 0,
+      "max_abs": 0.0,
+      "finite": true
+    },
+    {
+      "batch": 4,
+      "wall_ms": [
+        4026.3535999692976,
+        4029.173399962019,
+        4021.8911000411026,
+        4037.078100023791
+      ],
+      "warm_median_ms_per_frame": 1007.2933499905048,
+      "peak_allocated_gib": 10.125787258148193,
+      "changed_values": 98434148,
+      "max_abs": 0.03125,
+      "finite": true
+    },
+    {
+      "batch": 6,
+      "wall_ms": [
+        6093.8569999998435,
+        6077.952799969353,
+        6069.587400008459,
+        6062.10459995782
+      ],
+      "warm_median_ms_per_frame": 1011.5979000014098,
+      "peak_allocated_gib": 14.636164665222168,
+      "changed_values": 147932094,
+      "max_abs": 0.03125,
+      "finite": true
+    }
+  ]
+}
