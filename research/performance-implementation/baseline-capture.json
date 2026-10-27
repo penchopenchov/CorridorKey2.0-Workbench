@@ -1,0 +1,12 @@
+{
+  "label": "baseline",
+  "mode": "capture",
+  "load_seconds": 16.656105900008697,
+  "export_seconds": 134.39223960001254,
+  "peak_allocated_gib": 12.412610054016113,
+  "frames": 12,
+  "changed_values": 0,
+  "max_abs": 0.0,
+  "sum_abs": 0.0,
+  "values": 0
+}

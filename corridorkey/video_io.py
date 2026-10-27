@@ -405,6 +405,10 @@ class SequentialFrameDirWindowReader:
 
 def iter_video_frame_chunks(video_path: str, meta: dict, *, chunk_size: int,
                             need_model: bool):
+    if meta.get('video_decoder') == 'ffmpeg':
+        from .streaming import iter_stream_chunks
+        yield from iter_stream_chunks(video_path, meta, chunk_size=chunk_size, need_model=need_model)
+        return
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         raise RuntimeError(f"Could not open video: {video_path}")

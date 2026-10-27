@@ -43,6 +43,10 @@ def main():
     ap.add_argument("--weights", default=None,
                     help="Runtime checkpoint (.safetensors or legacy .pt). "
                          "Defaults to weights/corridorkey_v2.safetensors.")
+    ap.add_argument('--video_decoder', choices=('opencv', 'ffmpeg'), default='opencv',
+                    help='ffmpeg streams float video with explicit transfer/range; opencv preserves the legacy direct-CLI input path.')
+    ap.add_argument('--input_color', choices=('srgb', 'rec709', 'linear'), default='srgb')
+    ap.add_argument('--input_range', choices=('auto', 'full', 'limited'), default='auto')
     ap.add_argument("--hint_first_frame", default=None,
                     help="Optional matte image/dir; first frame only.")
     ap.add_argument("--hint_video", default=None,
@@ -137,6 +141,9 @@ def main():
     hann_chunk = args.hann_chunk if args.hann_chunk is not None else 80
     hann_stride = args.hann_stride if args.hann_stride is not None else max(1, hann_chunk // 2)
     infer_cfg = InferenceConfig(
+        video_decoder=args.video_decoder,
+        input_color=args.input_color,
+        input_range=args.input_range,
         hann_chunk=hann_chunk,
         hann_stride=hann_stride,
         auto_vram=auto_vram,

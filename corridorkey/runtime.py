@@ -99,6 +99,9 @@ class RuntimePaths:
 
 @dataclass
 class InferenceConfig:
+    video_decoder: str = 'opencv'
+    input_color: str = 'srgb'
+    input_range: str = 'auto'
     hann_chunk: int = 80
     hann_stride: int = 40
     carry_hint: bool = True
@@ -770,6 +773,11 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
     H, W = meta["shape_hw"]
     if cfg.auto_vram:
         apply_auto_vram(cfg, (H, W), T_all)
+    if not is_dir and cfg.video_decoder == 'ffmpeg':
+        from .streaming import StreamingVideoWindowReader
+        reader_cls = StreamingVideoWindowReader
+        meta.update(video_decoder='ffmpeg', ffmpeg_bin=writer_cfg.ffmpeg_bin,
+                    input_color=cfg.input_color, input_range=cfg.input_range)
     H_out, W_out = meta["output_hw"]
     meta["cutout_linear"] = cfg.cutout_linear
     meta["despill_strength"] = cfg.despill_strength

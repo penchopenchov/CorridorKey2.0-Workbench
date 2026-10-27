@@ -1,0 +1,4 @@
+*.log
+golden/
+cache/
+out_*/

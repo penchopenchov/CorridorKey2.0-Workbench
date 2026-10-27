@@ -388,9 +388,8 @@ def prepare_job(job, settings, ffmpeg):
             prepared = decode_sequence(job.input_path, work / 'input', settings.input_color,
                                        settings.sequence_fps, settings.num_frames)
         else:
-            prepared = decode_video(job.input_path, work / 'input', settings.input_color,
-                                    settings.input_range, settings.num_frames, ffmpeg,
-                                    threads=settings.preparation_threads)
+            fps, _ = video_metadata(job.input_path)
+            prepared = PreparedMedia(job.input_path, fps)
         hint = job.hint
         if settings.hint_mode == 'full' and hint:
             if hint.is_file():
@@ -399,7 +398,8 @@ def prepare_job(job, settings, ffmpeg):
                     raise ValueError(f'Matte FPS {matte_fps:g} does not match source FPS {prepared.fps:g}.')
                 hint = decode_video(hint, work / 'matte', 'linear', 'auto', settings.num_frames,
                                     ffmpeg, matte=True, threads=settings.preparation_threads).path
-            source_count = len(image_files(prepared.path))
+            source_count = (len(image_files(prepared.path)) if prepared.path.is_dir()
+                            else video_metadata(prepared.path)[1])
             if settings.num_frames > 0:
                 source_count = min(source_count, settings.num_frames)
             if len(image_files(hint)) < source_count:
@@ -409,10 +409,15 @@ def prepare_job(job, settings, ffmpeg):
 
 def inference_command(prepared, hint, output_dir, settings, ffmpeg, feature_cache=None):
     command = [sys.executable, str(ROOT / 'infer.py'), '--input', str(prepared.path),
-               '--output_dir', str(output_dir), '--frame_dir_linear', '--frame_dir_fps', str(prepared.fps),
+               '--output_dir', str(output_dir), '--frame_dir_fps', str(prepared.fps),
                '--ffmpeg_bin', str(ffmpeg), '--output_format', settings.output_format,
                '--exr_dtype', settings.exr_dtype, '--despill_strength', str(settings.despill_strength),
                '--outputs', *settings.outputs]
+    if prepared.path.is_dir():
+        command += ['--frame_dir_linear']
+    else:
+        command += ['--video_decoder', 'ffmpeg', '--input_color', settings.input_color,
+                    '--input_range', settings.input_range]
     if hint and settings.hint_mode != 'none':
         command += ['--hint_first_frame' if settings.hint_mode == 'first' else '--hint_video', str(hint),
                     '--hint_quality', str(settings.hint_quality)]
@@ -480,7 +485,7 @@ def prompt_run(paths, menu):
     thread_label = 'Auto (FFmpeg chooses)' if settings.preparation_threads == 0 else str(settings.preparation_threads)
     menu.note(f'CPU preparation threads: {thread_label}')
     menu.note(f'Frames: {settings.num_frames if settings.num_frames > 0 else "all"} | Cache: {settings.cache_root}')
-    menu.note('Temporary float frames can use substantial disk space for long 4K clips.')
+    menu.note('Video input streams as float frames; frame-sequence and low-VRAM caches use temporary disk space.')
     for index, job in enumerate(jobs, 1):
         menu.note(f'{index}. {job.source} -> {output_folder(job, settings)}')
         if job.hint:
