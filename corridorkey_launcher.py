@@ -441,7 +441,7 @@ def output_folder(job, settings):
     return parent / f'out_{job.source.stem}'
 
 
-def run_job(job, settings, ffmpeg):
+def run_job(job, settings, ffmpeg, *, model=None):
     destination = output_folder(job, settings)
     destination.mkdir(parents=True, exist_ok=True)
     with prepare_job(job, settings, ffmpeg) as (prepared, hint, feature_cache):
@@ -450,23 +450,10 @@ def run_job(job, settings, ffmpeg):
                   'settings': asdict(settings), 'fps': prepared.fps, 'command': command}
         (destination / 'launcher_settings.json').write_text(json.dumps(record, indent=2, default=str) + '\n', encoding='utf-8')
         print(f'Processing -> {destination}', flush=True)
-        environment = os.environ.copy()
-        environment.update(HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1', PYTHONUNBUFFERED='1')
-        process = cache_popen(command, cwd=ROOT, env=environment)
-        try:
-            result = process.wait()
-        except BaseException:
-            if process.poll() is None:
-                process.terminate()
-                try:
-                    process.wait(timeout=10)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait()
-            raise
-        if result:
-            raise RuntimeError(f'Inference failed (exit {result}). See the console output above.')
+        from infer import main as infer_main
+        model = infer_main(command[2:], model=model)
     print(f'Finished: {destination}', flush=True)
+    return model
 
 
 def prompt_run(paths, menu):
@@ -528,10 +515,11 @@ def main(argv=None):
         jobs, settings = configured
         if settings.cache_root.resolve() != default_cache.resolve():
             recover_caches(settings.cache_root)
+        model = None
         for index, job in enumerate(jobs, 1):
             print_header(f'Clip {index}/{len(jobs)}: {job.source.name}')
             with progress_job(f'{index}/{len(jobs)}'):
-                run_job(job, settings, ffmpeg)
+                model = run_job(job, settings, ffmpeg, model=model)
         print_header('All selected clips completed')
         return 0
     except KeyboardInterrupt:

@@ -34,7 +34,7 @@ def _parse_outputs(values):
     return out
 
 
-def main():
+def main(argv=None, model=None):
     ap = argparse.ArgumentParser(
         description="CorridorKey v2 native-resolution raw-video inference")
     ap.add_argument("--input", required=True,
@@ -49,6 +49,14 @@ def main():
     ap.add_argument('--input_range', choices=('auto', 'full', 'limited'), default='auto')
     ap.add_argument('--preprocess_device', choices=('cpu', 'cuda'), default='cpu',
                     help='CPU preserves reference arithmetic; CUDA is an optional faster float-video path with small rounding differences.')
+    ap.add_argument('--reference_pipeline', action='store_true',
+                    help='Use the original staged CPU intermediate path for numerical comparisons.')
+    ap.add_argument('--cache_foundations', action='store_true',
+                    help='Experimental: reuse frozen features across Hann windows; smaller batches can change numerical rounding.')
+    ap.add_argument('--stage2_attention', choices=('default', 'efficient', 'cudnn'), default='default',
+                    help='Optional Stage 2 SDPA backend experiment; default preserves reference selection.')
+    ap.add_argument('--compile_stage2', choices=('none', 'default', 'reduce-overhead', 'max-autotune'), default='none',
+                    help='Optional compilation experiment; falls back to eager if the compiler is unavailable.')
     ap.add_argument("--hint_first_frame", default=None,
                     help="Optional matte image/dir; first frame only.")
     ap.add_argument("--hint_video", default=None,
@@ -112,7 +120,7 @@ def main():
     ap.add_argument("--low_vram_swin_window_batch", type=int, default=16)
     ap.add_argument("--low_vram_full_attn_query_chunk_tokens", type=int,
                     default=2048)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     with Progress('Loading Python dependencies', unit=None):
         import torch
@@ -147,6 +155,10 @@ def main():
         input_color=args.input_color,
         input_range=args.input_range,
         preprocess_device=args.preprocess_device,
+        resident_buffers=not args.reference_pipeline,
+        cache_foundations=args.cache_foundations,
+        stage2_attention=args.stage2_attention,
+        compile_stage2=args.compile_stage2,
         hann_chunk=hann_chunk,
         hann_stride=hann_stride,
         auto_vram=auto_vram,
@@ -177,8 +189,9 @@ def main():
         output_format=args.output_format,
         exr_dtype=args.exr_dtype,
     )
-    with Progress('Loading model', unit=None):
-        model = load_model(paths, device="cuda")
+    if model is None:
+        with Progress('Loading model', unit=None):
+            model = load_model(paths, device="cuda")
     run_inference(
         model,
         args.input,
@@ -188,6 +201,7 @@ def main():
         initial_hint_path=args.hint_first_frame,
         hint_video_path=args.hint_video,
     )
+    return model
 
 
 if __name__ == "__main__":

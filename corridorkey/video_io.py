@@ -19,6 +19,57 @@ import torch
 from . import color_utils as cu
 
 
+class PendingFrames:
+    """Pinned host output with a completion event, consumed by a writer thread."""
+    def __init__(self, array, event, expand_channels=None):
+        self.array, self.event = array, event
+        self.expand_channels = expand_channels
+        self.shape, self.dtype, self.ndim = array.shape, array.dtype, array.ndim
+        if expand_channels is not None:
+            self.shape = (*array.shape[:-1], expand_channels)
+
+    def resolve(self):
+        self.event.synchronize()
+        return (np.repeat(self.array, self.expand_channels, axis=-1)
+                if self.expand_channels is not None else self.array)
+
+    def __array__(self, dtype=None):
+        return np.asarray(self.resolve(), dtype=dtype)
+
+
+_download_streams = {}
+
+
+def download_uint16(x, expand_channels=None):
+    quantized = (x * 65535.0).to(torch.uint16).contiguous()
+    if not x.is_cuda:
+        array = quantized.numpy()
+        return np.repeat(array, expand_channels, axis=-1) if expand_channels is not None else array
+    host = torch.empty(quantized.shape, dtype=torch.uint16, pin_memory=True)
+    if x.device not in _download_streams:
+        _download_streams[x.device] = torch.cuda.Stream(device=x.device)
+    stream = _download_streams[x.device]
+    stream.wait_stream(torch.cuda.current_stream(x.device))
+    with torch.cuda.stream(stream):
+        host.copy_(quantized, non_blocking=True)
+        quantized.record_stream(stream)
+        event = torch.cuda.Event()
+        event.record(stream)
+    return PendingFrames(host.numpy(), event, expand_channels)
+
+
+def _put_writer_item(writer, item):
+    while True:
+        if writer.err is not None:
+            raise writer.err
+        try:
+            writer.q.put(item, timeout=.1)
+            return
+        except queue.Full:
+            if not writer.thread.is_alive():
+                raise RuntimeError(f'Output writer stopped: {writer.path}')
+
+
 @dataclass
 class WriterConfig:
     ffmpeg_bin: str = "ffmpeg"
@@ -371,7 +422,7 @@ class SequentialVideoWindowReader:
         model = torch.stack([self.cache[t][0] for t in range(t0, t1)])
         foundation = torch.stack([self.cache[t][1] for t in range(t0, t1)])
         review = torch.stack([self.cache[t][2] for t in range(t0, t1)])
-        for old_t in [k for k in self.cache if k < t0]:
+        for old_t in [k for k in self.cache if k < getattr(self, 'retain_from', t0)]:
             del self.cache[old_t]
         return model, foundation, review
 
@@ -398,7 +449,7 @@ class SequentialFrameDirWindowReader:
         model = torch.stack([self.cache[t][0] for t in range(t0, t1)])
         foundation = torch.stack([self.cache[t][1] for t in range(t0, t1)])
         review = torch.stack([self.cache[t][2] for t in range(t0, t1)])
-        for old_t in [k for k in self.cache if k < t0]:
+        for old_t in [k for k in self.cache if k < getattr(self, 'retain_from', t0)]:
             del self.cache[old_t]
         return model, foundation, review
 
@@ -673,7 +724,9 @@ class ThreadedVideoWriter:
                 if item is None:
                     self.q.task_done()
                     return
-                self.proc.stdin.write(item.tobytes())
+                if isinstance(item, PendingFrames):
+                    item = item.resolve()
+                self.proc.stdin.write(memoryview(item).cast('B'))
                 self.q.task_done()
         except Exception as exc:
             self.err = exc
@@ -684,19 +737,25 @@ class ThreadedVideoWriter:
     def write_many(self, frames: np.ndarray):
         if self.err is not None:
             raise self.err
-        arr = np.ascontiguousarray(frames)
+        arr = frames if isinstance(frames, PendingFrames) else np.ascontiguousarray(frames)
         if arr.ndim != 4 or arr.shape[-1] != self.channels:
             raise ValueError(
                 f"expected batched frames as NHWC uint16 with {self.channels} channels, got {arr.shape}")
         if arr.dtype != np.uint16:
             raise ValueError(f"expected uint16 frames, got {arr.dtype}")
-        self.q.put(arr)
+        _put_writer_item(self, arr)
 
     def release(self):
-        self.q.put(None)
+        try:
+            _put_writer_item(self, None)
+        except Exception as exc:
+            self.err = self.err or exc
         self.thread.join()
         if self.proc is not None and self.proc.stdin is not None:
-            self.proc.stdin.close()
+            try:
+                self.proc.stdin.close()
+            except Exception as exc:
+                self.err = self.err or exc
         rc = self.proc.wait() if self.proc is not None else 0
         if rc != 0 and self.err is None:
             self.err = RuntimeError(f"ffmpeg writer failed with exit code {rc}: {self.path}")
@@ -770,14 +829,17 @@ class ExrSequenceWriter:
                 f"{self.channels} channels, got {arr.shape}")
         if arr.dtype != np.float32:
             raise ValueError(f"expected float32 frames, got {arr.dtype}")
-        self.q.put((self.frame_idx, arr))
+        _put_writer_item(self, (self.frame_idx, arr))
         self.frame_idx += arr.shape[0]
 
     def write(self, frame: np.ndarray):
         self.write_many(frame[None])
 
     def release(self):
-        self.q.put(None)
+        try:
+            _put_writer_item(self, None)
+        except Exception as exc:
+            self.err = self.err or exc
         self.thread.join()
         if self.err is not None:
             raise self.err

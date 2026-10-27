@@ -465,6 +465,7 @@ def main():
 
         # Run Batch Sequentially
         package_root = Path(__file__).resolve().parent
+        batch_model = None
         for idx, clip in enumerate(batch_clips, 1):
             print_header(f"Processing Clip {idx} of {len(batch_clips)}: {clip.name}")
             
@@ -548,15 +549,11 @@ def main():
                 env["HF_HUB_OFFLINE"] = "1"
                 env["TRANSFORMERS_OFFLINE"] = "1"
                 
-                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, env=env)
-                for line in process.stdout:
-                    print(line, end="")
-                process.wait()
-                
-                if process.returncode == 0:
-                    print(f"\n{Colors.BOLD}{Colors.GREEN}[SUCCESS] Finished {clip.name} successfully!{Colors.RESET}")
-                else:
-                    print(f"\n{Colors.BOLD}{Colors.YELLOW}[ERROR] Failed {clip.name} with exit code {process.returncode}{Colors.RESET}")
+                from infer import main as infer_main
+                batch_model = infer_main(cmd[2:], model=batch_model)
+                print(f"\n{Colors.BOLD}{Colors.GREEN}[SUCCESS] Finished {clip.name} successfully!{Colors.RESET}")
+            except (RuntimeError, OSError, ValueError) as error:
+                print(f"\n{Colors.BOLD}{Colors.YELLOW}[ERROR] Failed {clip.name}: {error}{Colors.RESET}")
             except KeyboardInterrupt:
                 print(f"\n{Colors.YELLOW}[INTERRUPTED] Batch paused by user.{Colors.RESET}")
                 confirm_continue = prompt_confirm("Do you want to continue to the next clip in the batch?", default=True)
@@ -791,6 +788,7 @@ def main():
             custom_output_parent = clean_path(translate_windows_path(output_dir_str))
 
         is_first_run = True
+        session_model = None
 
         # Execution Loop for Single Clip Mode
         while True:
@@ -922,16 +920,12 @@ def main():
                 env["HF_HUB_OFFLINE"] = "1"
                 env["TRANSFORMERS_OFFLINE"] = "1"
                 
-                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, env=env)
-                for line in process.stdout:
-                    print(line, end="")
-                process.wait()
-                
-                if process.returncode == 0:
-                    print(f"\n{Colors.BOLD}{Colors.GREEN}[SUCCESS] CorridorKey v2 inference completed successfully!{Colors.RESET}")
-                    print(f"Outputs written to: {Colors.CYAN}{output_dir}{Colors.RESET}\n")
-                else:
-                    print(f"\n{Colors.BOLD}{Colors.YELLOW}[ERROR] Inference failed with exit code {process.returncode}{Colors.RESET}\n")
+                from infer import main as infer_main
+                session_model = infer_main(cmd[2:], model=session_model)
+                print(f"\n{Colors.BOLD}{Colors.GREEN}[SUCCESS] CorridorKey v2 inference completed successfully!{Colors.RESET}")
+                print(f"Outputs written to: {Colors.CYAN}{output_dir}{Colors.RESET}\n")
+            except (RuntimeError, OSError, ValueError) as error:
+                print(f"\n{Colors.BOLD}{Colors.YELLOW}[ERROR] Inference failed: {error}{Colors.RESET}\n")
             except KeyboardInterrupt:
                 print(f"\n{Colors.YELLOW}[INTERRUPTED] Inference run canceled by user.{Colors.RESET}\n")
 
