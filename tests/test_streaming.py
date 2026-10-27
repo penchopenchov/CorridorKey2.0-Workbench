@@ -74,5 +74,18 @@ class StreamingTests(unittest.TestCase):
                 self.assertEqual(command[command.index('--input_range')+1],'limited')
                 self.assertEqual(command[command.index('--video_decoder')+1],'ffmpeg')
 
+    @unittest.skipUnless(torch.cuda.is_available(),'CUDA required')
+    def test_gpu_preprocessing_preserves_hdr_and_reflect_padding_with_bf16_tolerance(self):
+        stream=self.streaming()
+        self.assertTrue(hasattr(stream,'preprocess_linear_frame_cuda'),'GPU preprocessing is missing')
+        for hw in ((73,101),(1,1),(216,384)):
+            frame=np.random.default_rng(2).uniform(-.2,20,(*hw,3)).astype(np.float32)
+            meta={'shape_hw':tuple(((x+127)//128)*128 for x in hw),'model_native_hw':hw}
+            cpu=stream.preprocess_linear_frame(frame,meta,need_model=True)
+            gpu=stream.preprocess_linear_frame_cuda(frame,meta,need_model=True)
+            for a,b in zip(cpu,gpu):
+                self.assertTrue(bool(b.isfinite().all()))
+                torch.testing.assert_close(a,b.cpu(),rtol=0,atol=.0078125)
+
 if __name__=='__main__':
     unittest.main()

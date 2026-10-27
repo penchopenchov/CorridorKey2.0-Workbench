@@ -102,6 +102,7 @@ class InferenceConfig:
     video_decoder: str = 'opencv'
     input_color: str = 'srgb'
     input_range: str = 'auto'
+    preprocess_device: str = 'cpu'
     hann_chunk: int = 80
     hann_stride: int = 40
     carry_hint: bool = True
@@ -777,7 +778,8 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
         from .streaming import StreamingVideoWindowReader
         reader_cls = StreamingVideoWindowReader
         meta.update(video_decoder='ffmpeg', ffmpeg_bin=writer_cfg.ffmpeg_bin,
-                    input_color=cfg.input_color, input_range=cfg.input_range)
+                    input_color=cfg.input_color, input_range=cfg.input_range,
+                    preprocess_device=cfg.preprocess_device)
     H_out, W_out = meta["output_hw"]
     meta["cutout_linear"] = cfg.cutout_linear
     meta["despill_strength"] = cfg.despill_strength

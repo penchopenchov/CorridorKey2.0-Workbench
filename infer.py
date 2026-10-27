@@ -47,6 +47,8 @@ def main():
                     help='ffmpeg streams float video with explicit transfer/range; opencv preserves the legacy direct-CLI input path.')
     ap.add_argument('--input_color', choices=('srgb', 'rec709', 'linear'), default='srgb')
     ap.add_argument('--input_range', choices=('auto', 'full', 'limited'), default='auto')
+    ap.add_argument('--preprocess_device', choices=('cpu', 'cuda'), default='cpu',
+                    help='CPU preserves reference arithmetic; CUDA is an optional faster float-video path with small rounding differences.')
     ap.add_argument("--hint_first_frame", default=None,
                     help="Optional matte image/dir; first frame only.")
     ap.add_argument("--hint_video", default=None,
@@ -144,6 +146,7 @@ def main():
         video_decoder=args.video_decoder,
         input_color=args.input_color,
         input_range=args.input_range,
+        preprocess_device=args.preprocess_device,
         hann_chunk=hann_chunk,
         hann_stride=hann_stride,
         auto_vram=auto_vram,

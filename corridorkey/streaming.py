@@ -91,6 +91,8 @@ class FloatVideoDecoder:
 
 
 def preprocess_linear_frame(linear, meta, *, need_model):
+    if meta.get('preprocess_device') == 'cuda':
+        return preprocess_linear_frame_cuda(linear, meta, need_model=need_model)
     display = np.clip(cu.linear_to_srgb(np.maximum(linear, 0.0)), 0., 1.)
     h, w = meta['shape_hw']
     hw = meta['model_native_hw']
@@ -103,6 +105,27 @@ def preprocess_linear_frame(linear, meta, *, need_model):
     linear, _ = center_pad_to_shape(linear, h, w)
     model = torch.from_numpy(cu.linear_to_asinh(linear).transpose(2, 0, 1)).to(torch.bfloat16)
     return model, display_t, display_t
+
+
+def preprocess_linear_frame_cuda(linear, meta, *, need_model):
+    """Optional GPU arithmetic; CPU mode remains the exact reference default."""
+    if tuple(linear.shape[:2]) != tuple(meta['model_native_hw']):
+        raise ValueError('GPU preprocessing requires native model_scale=1.0')
+    host = torch.from_numpy(np.ascontiguousarray(linear.transpose(2, 0, 1))).pin_memory()
+    x = host.to('cuda', non_blocking=True)
+    h, w = x.shape[-2:]
+    oh, ow = meta['shape_hw']
+    # Reflect-101 works even when padding exceeds a tiny source dimension.
+    def indices(size, target):
+        if size == 1:
+            return torch.zeros(target, device=x.device, dtype=torch.long)
+        offsets = torch.arange(target, device=x.device) - (target - size) // 2
+        offsets = offsets.remainder(2 * (size - 1))
+        return torch.minimum(offsets, 2 * (size - 1) - offsets)
+    x = x.index_select(1, indices(h, oh)).index_select(2, indices(w, ow))
+    display = cu.linear_to_vfm_sdr_torch(x).to(torch.bfloat16)
+    model = cu.linear_to_asinh(x).to(torch.bfloat16) if need_model else None
+    return model, display, display
 
 
 def open_decoder(source, meta):
