@@ -13,6 +13,10 @@ The terminal shows current stage, percentage, completed frames, elapsed time
 and stage ETA. Loading and finalization show an elapsed heartbeat while their
 remaining time is unknown. See README_ADVANCED.txt for counter semantics.
 GPU stages include this worker's allocated/reserved PyTorch VRAM in GiB.
+The guided launcher streams float video without preparing a whole-clip EXR
+cache. It reuses its loaded model across clips and retains normal-memory
+intermediates on GPU. Frame-sequence/hint preparation and low-VRAM features
+can still use temporary disk space. See README.md for performance options.
 No system Python, pip, uv, CUDA toolkit, environment activation, or online
 model download is required once this complete folder is installed.
 

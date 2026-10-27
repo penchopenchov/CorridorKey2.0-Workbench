@@ -1,0 +1,55 @@
+{
+  "frames": 12,
+  "native_hw": [
+    2160,
+    3840
+  ],
+  "fps": 24,
+  "hann": [
+    8,
+    4
+  ],
+  "outputs": [
+    "alpha",
+    "fg"
+  ],
+  "load_seconds": 16.280254299985245,
+  "runs": [
+    {
+      "label": "baseline",
+      "iteration": 0,
+      "preparation_seconds": 25.093735000002198,
+      "inference_and_export_seconds": 61.1467994999839,
+      "total_seconds": 86.2406344000483,
+      "cold_equivalent_seconds": 102.52088870003354,
+      "peak_allocated_gib": 12.412610054016113
+    },
+    {
+      "label": "optimized",
+      "iteration": 0,
+      "preparation_seconds": 1.5999539755284786e-06,
+      "inference_and_export_seconds": 52.71388840000145,
+      "total_seconds": 52.71397329994943,
+      "cold_equivalent_seconds": 68.99422759993467,
+      "peak_allocated_gib": 13.072044372558594
+    },
+    {
+      "label": "baseline",
+      "iteration": 1,
+      "preparation_seconds": 25.860593100020196,
+      "inference_and_export_seconds": 59.5476931000012,
+      "total_seconds": 85.40836349996971,
+      "cold_equivalent_seconds": 101.68861779995495,
+      "peak_allocated_gib": 12.412610054016113
+    },
+    {
+      "label": "optimized",
+      "iteration": 1,
+      "preparation_seconds": 1.00000761449337e-06,
+      "inference_and_export_seconds": 52.37698040000396,
+      "total_seconds": 52.37702419998823,
+      "cold_equivalent_seconds": 68.65727849997347,
+      "peak_allocated_gib": 13.072044372558594
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import sys
 import time
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
+sys.path.insert(0,str(Path(__file__).parent))
 import numpy as np
 import torch
 from corridorkey import runtime as rt
@@ -19,6 +20,11 @@ ap.add_argument('--input',default=str(ROOT/'research/performance-2026-10-26/prep
 ap.add_argument('--stream',action='store_true')
 ap.add_argument('--label',default='baseline')
 args=ap.parse_args()
+if args.mode=='capture':
+    if args.stream:
+        ap.error('Reference capture requires the original prepared linear EXRs, without --stream')
+    from reference_runtime import load_reference_runtime
+    rt=load_reference_runtime()
 folder=Path(__file__).parent
 gold=folder/'golden'
 gold.mkdir(exist_ok=True)

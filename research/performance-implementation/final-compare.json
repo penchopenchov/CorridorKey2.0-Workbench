@@ -1,0 +1,12 @@
+{
+  "label": "final",
+  "mode": "compare",
+  "load_seconds": 16.296290900034364,
+  "export_seconds": 51.177575499983504,
+  "peak_allocated_gib": 13.078502655029297,
+  "frames": 12,
+  "changed_values": 0,
+  "max_abs": 0.0,
+  "sum_abs": 0.0,
+  "values": 401080320
+}

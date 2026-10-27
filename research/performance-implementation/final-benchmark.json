@@ -1,0 +1,17 @@
+{
+  "load_seconds": 16.296290900034364,
+  "runs": [
+    {
+      "iteration": 0,
+      "export_seconds": 44.73942629998783,
+      "cold_equivalent_seconds": 61.03571720002219,
+      "peak_allocated_gib": 13.076152801513672
+    },
+    {
+      "iteration": 1,
+      "export_seconds": 45.231779199966695,
+      "cold_equivalent_seconds": 61.52807010000106,
+      "peak_allocated_gib": 13.076152801513672
+    }
+  ]
+}

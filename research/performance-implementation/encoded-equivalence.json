@@ -1,0 +1,14 @@
+[
+  {
+    "output": "alpha",
+    "identical": true,
+    "reference_sha256": "1335fb6fd6099270cee308de330850736a0dd7846211f92fe8453f23cafbc937",
+    "final_sha256": "1335fb6fd6099270cee308de330850736a0dd7846211f92fe8453f23cafbc937"
+  },
+  {
+    "output": "fg",
+    "identical": true,
+    "reference_sha256": "d35dde6aa2effcbcc8c9fbeec8cb0e8ce777110b4c55ee42eac3d86dff7fb93b",
+    "final_sha256": "d35dde6aa2effcbcc8c9fbeec8cb0e8ce777110b4c55ee42eac3d86dff7fb93b"
+  }
+]

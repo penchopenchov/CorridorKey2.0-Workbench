@@ -1,0 +1,35 @@
+{
+  "original_threads": 8,
+  "runs": [
+    {
+      "cpu_threads": 1,
+      "warm_median_ms": 1118.7524999841116,
+      "bit_exact": true
+    },
+    {
+      "cpu_threads": 2,
+      "warm_median_ms": 918.6249999911524,
+      "bit_exact": true
+    },
+    {
+      "cpu_threads": 4,
+      "warm_median_ms": 842.5721999956295,
+      "bit_exact": true
+    },
+    {
+      "cpu_threads": 8,
+      "warm_median_ms": 852.8959000250325,
+      "bit_exact": true
+    },
+    {
+      "cpu_threads": 16,
+      "warm_median_ms": 809.4788999878801,
+      "bit_exact": true
+    }
+  ],
+  "cuda": {
+    "warm_median_ms": 55.840699991676956,
+    "bit_exact": false,
+    "max_abs": 0.00390625
+  }
+}

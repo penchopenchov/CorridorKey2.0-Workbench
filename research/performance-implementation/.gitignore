@@ -2,3 +2,8 @@
 golden/
 cache/
 out_*/
+matrix_source/
+matrix_hints/
+baseline_code/
+prepared_bench/
+batch_sources/

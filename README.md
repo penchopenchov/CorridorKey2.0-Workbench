@@ -5,17 +5,29 @@
 > High reasoning). The underlying model and inference code is the original
 > upstream CorridorKey 2.0. Please review the code before use.
 
-## Faster Windows source preparation
+## Faster CLI exports
 
-The Windows launcher now defaults to **Auto CPU preparation threads**, replacing
-the previous fixed two-thread limit for temporary EXR encoding. The fork owner
-reported a significant speedup in the **Decoding source** stage on an AMD Ryzen
-7 3800X (16 logical threads). This optimizes the decoding/preparation stage;
-the actual gain depends on the footage, CPU and cache drive.
+The guided launcher streams float video directly from FFmpeg, preserving its
+explicit sRGB/Rec.709/linear and range settings without first writing and
+linearizing a whole clip of temporary EXRs. Normal-memory inference keeps
+batons, carried hints and pending model inputs on GPU, runs RVM chronologically
+without its whole-clip disk prepass, and downloads video outputs asynchronously.
+The launchers reuse one loaded model across successive clips. Low-memory staged
+inference remains available, and native resolution, temporal settings, precision
+boundaries and encoding defaults are preserved.
 
-Float precision, lossless ZIP compression, color conversion and model settings
-are unchanged. You can also choose a manual thread count or **Conservative**
-to restore the previous two-thread setting at launch.
+Direct CLI users can select the same float input path with
+`--video_decoder ffmpeg --input_color srgb --input_range auto`; the legacy
+OpenCV direct-CLI input path remains the default for compatibility. Use
+`--reference_pipeline` to compare the original CPU/memmap intermediate path.
+Each completed inference writes a `*_performance.json` summary beside outputs.
+
+The optional `--preprocess_device cuda`, `--cache_foundations`,
+`--stage2_attention cudnn`, and `--compile_stage2 default` are experiments:
+they can change numerical rounding and are **disabled by default**. Compilation
+requires a compatible compiler environment and falls back to eager if unavailable.
+See the [measured implementation report](research/performance-implementation/RESULTS.md)
+for benchmark conditions, exact-output checks and limitations.
 
 Welcome to CorridorKey 2.0! You may rest easy, weary artist. The green beast has been slain. The CorridorKey 2.0 model was designed and trained by Zachary Harris, in direct collaboration with Niko and Corridor Digital.
 

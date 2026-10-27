@@ -39,3 +39,12 @@ Each task follows failing behavior test → minimal implementation → passing s
 - Baseline: `6f987fa`; backup `codex/backup-before-implementation-2026-10-26`; implementation branch `codex/cli-performance`.
 - Ruling: user explicitly authorized ordered implementation; proceed inline without another plan approval round.
 - Pre-flight: decoder metadata feeds preprocessing; reader tensors feed Hann and prepasses; resident tensor/NumPy items share a stage-2 writer interface; CLI config is shared by launcher batch jobs.
+- Task 1 complete: `543306d`; float decoder matches reference EXRs in all tested transfer/range combinations; 4K streamed predictions matched 401,080,320 values exactly.
+- Task 2 complete: `4db05bd`; optional GPU preprocessing implemented and tested. Ruling: keep CPU default because GPU arithmetic changes rounding; honor the user's quality constraint.
+- Tasks 3–6 complete: `a030f86`; resident inference, async output, model reuse and explicit optional backends. Ruling: commit their shared runtime interfaces together, keeping a coherent runnable snapshot.
+- Ruling: frozen feature caching changes batch shapes and predictions; leave opt-in (`cache_foundations=False`) after measured comparison, rather than silently change quality.
+- Ruling: preserve NumPy's FP32 division rounding via double quotient then FP32/FP16 on GPU; direct GPU FP32 division failed exactness tests.
+- Final background preparation: `e875865`; bounded prefetch preserves final 4K raw predictions exactly and reduces clean export time further.
+- Review findings fixed with red/green tests: shared-reader eviction on RVM lookahead; streamed brightness/contrast; compiler construction and fallback backend selection; writer close error/process reaping; terminal decoder error propagation.
+- Validation: 22 unit tests pass; actual-model HDR/hint/irregular-tail matrix passes; real launcher low-to-normal batch reuses exactly one model; final clean 4K runs 44.74/45.23 s versus original 86.24/85.41 s (same two video outputs, load excluded).
+- Independent review: no outstanding findings after final lifecycle fixes. No production dependencies upgraded, no merge or push performed.

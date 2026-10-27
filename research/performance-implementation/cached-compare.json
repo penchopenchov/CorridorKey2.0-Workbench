@@ -1,0 +1,12 @@
+{
+  "label": "cached",
+  "mode": "compare",
+  "load_seconds": 17.0186952999793,
+  "export_seconds": 58.79430360003607,
+  "peak_allocated_gib": 13.193115234375,
+  "frames": 12,
+  "changed_values": 153900153,
+  "max_abs": 0.0234375,
+  "sum_abs": 127397.8564453125,
+  "values": 401080320
+}

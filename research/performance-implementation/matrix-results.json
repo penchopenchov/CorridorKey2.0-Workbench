@@ -1,0 +1,35 @@
+[
+  {
+    "case": "low_memory",
+    "frames": 13,
+    "finite": true
+  },
+  {
+    "case": "none",
+    "frames": 13,
+    "bit_exact": true,
+    "max_abs": 0.0,
+    "finite": true
+  },
+  {
+    "case": "first",
+    "frames": 13,
+    "bit_exact": true,
+    "max_abs": 0.0,
+    "finite": true
+  },
+  {
+    "case": "full",
+    "frames": 13,
+    "bit_exact": true,
+    "max_abs": 0.0,
+    "finite": true
+  },
+  {
+    "case": "full_authoritative",
+    "frames": 13,
+    "bit_exact": true,
+    "max_abs": 0.0,
+    "finite": true
+  }
+]

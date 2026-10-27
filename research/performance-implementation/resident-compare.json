@@ -1,0 +1,12 @@
+{
+  "label": "resident",
+  "mode": "compare",
+  "load_seconds": 16.523698200006038,
+  "export_seconds": 59.158510599983856,
+  "peak_allocated_gib": 13.118431091308594,
+  "frames": 12,
+  "changed_values": 0,
+  "max_abs": 0.0,
+  "sum_abs": 0.0,
+  "values": 401080320
+}
