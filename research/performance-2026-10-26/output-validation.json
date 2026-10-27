@@ -1,0 +1,16 @@
+[
+  {
+    "file": "prepared_exrs_alpha.mp4",
+    "decoded_frames": 12,
+    "fps": 24.0,
+    "width": 3840.0,
+    "height": 2160.0
+  },
+  {
+    "file": "prepared_exrs_fg.mp4",
+    "decoded_frames": 12,
+    "fps": 24.0,
+    "width": 3840.0,
+    "height": 2160.0
+  }
+]

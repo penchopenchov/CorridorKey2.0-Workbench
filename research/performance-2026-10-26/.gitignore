@@ -1,0 +1,4 @@
+*.log
+prepared_exrs/
+feature_cache/
+out_baseline/

@@ -1,0 +1,63 @@
+{
+  "flash_built": false,
+  "cases": [
+    {
+      "mask": "none",
+      "backend": "SDPBackend.EFFICIENT_ATTENTION",
+      "wall_ms": [
+        5.9510000282898545,
+        5.597499955911189,
+        1.8660000059753656,
+        1.8055999535135925
+      ],
+      "warm_median_ms": 1.8660000059753656,
+      "max_abs_delta": 0.0
+    },
+    {
+      "mask": "none",
+      "backend": "SDPBackend.CUDNN_ATTENTION",
+      "wall_ms": [
+        586.9599999859929,
+        1.2672999873757362,
+        1.2336000218056142,
+        1.2135000433772802
+      ],
+      "warm_median_ms": 1.2336000218056142,
+      "max_abs_delta": 0.0078125
+    },
+    {
+      "mask": "none",
+      "backend": "SDPBackend.FLASH_ATTENTION",
+      "error": "RuntimeError: No available kernel. Aborting execution."
+    },
+    {
+      "mask": "key_mask",
+      "backend": "SDPBackend.EFFICIENT_ATTENTION",
+      "wall_ms": [
+        10.87360002566129,
+        2.335699973627925,
+        2.321500040125102,
+        2.287300012540072
+      ],
+      "warm_median_ms": 2.321500040125102,
+      "max_abs_delta": 0.0
+    },
+    {
+      "mask": "key_mask",
+      "backend": "SDPBackend.CUDNN_ATTENTION",
+      "wall_ms": [
+        563.1270000012591,
+        1.449399976991117,
+        1.374599989503622,
+        1.388499978929758
+      ],
+      "warm_median_ms": 1.388499978929758,
+      "max_abs_delta": 0.00390625
+    },
+    {
+      "mask": "key_mask",
+      "backend": "SDPBackend.FLASH_ATTENTION",
+      "error": "RuntimeError: No available kernel. Aborting execution."
+    }
+  ]
+}
