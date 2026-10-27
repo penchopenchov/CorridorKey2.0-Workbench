@@ -66,6 +66,77 @@ There was no measured throughput benefit from larger batches, despite substantia
 
 GPU memory capacity and GPU execution throughput are different resources. NVIDIA likewise advises measuring batch sizes rather than assuming larger batches are always faster. [NVIDIA inference batching guidance](https://docs.nvidia.com/deeplearning/tensorrt/latest/performance/optimization.html#batching). Raw records: [batching-results.json](batching-results.json); reproduce with `runtime/python.exe research/performance-implementation/benchmark_batching.py`.
 
+## Follow-up: small repeated costs
+
+The next pass uses the previously shipped `f952e61` as its baseline, backed up
+before edits at `codex/backup-before-micro-optimizations-2026-10-27`.
+
+- Use the exact positive sRGB branch where inputs have already been clamped
+  nonnegative. Keep the same threshold, operation order and signed-zero clamp;
+  signed scene-linear EXR output retains the original conversion path.
+- Compute the checker background in linear light on the GPU once per export,
+  after Stage 2 has reached its rendering device. Do not allocate a checker
+  at all for exports that do not request it.
+- Share despill results between checker and cutout. Skip linear despill when
+  the selected video cutout uses the separately computed sRGB result.
+
+Complete-export comparison: 48 synthetic 3840×2160 frames at 24 fps, Hann 8/4,
+all four video outputs, unchanged encoders/settings, shared loaded model,
+before/after/after/before execution order. Loading and fixture generation are
+excluded; decoding, inference, rendering, encoding and final encoder draining
+are included.
+
+| Version | Export times | Mean |
+|---|---:|---:|
+| Previous shipped pipeline | 187.67 / 189.71 s | 188.69 s |
+| Additional small optimizations | 180.92 / 185.00 s | 182.96 s |
+
+This is **3.04% less completed-export time** in this test, an additional gain
+over the earlier pipeline improvements. All four encoded files have identical
+SHA-256 hashes across all four runs. Peak allocated VRAM rises from about
+13.08 to 13.18 GiB because the checker background remains resident.
+Raw results: [micro-export-benchmark.json](micro-export-benchmark.json).
+
+The final component benchmark alternates execution order on each iteration.
+Preprocessing has eight samples per version; rendering has twelve and includes
+GPU quantization, download and resolving the CPU frames, with encoding omitted.
+All tested preprocessing tensors and rendered pixels match the frozen baseline.
+
+| Isolated 4K component | Previous median | New median |
+|---|---:|---:|
+| CPU preprocessing | 864.34 ms/frame | 713.76 ms/frame |
+| Alpha + foreground rendering/download | 105.13 ms/frame | 96.13 ms/frame |
+| All four outputs' rendering/download | 139.65 ms/frame | 117.03 ms/frame |
+
+Raw samples: [micro-benchmark.json](micro-benchmark.json). These correspond to
+17.4% less preprocessing time and 16.2% less four-output rendering/download time.
+
+These are two samples per version on a two-second looping test pattern,
+not a guaranteed percentage for multi-minute camera footage. The per-frame
+savings recur, but GPU inference and encoding still dominate the complete
+export. Do not add isolated component percentages to the full-export gain.
+Alpha/foreground-only rendering showed overlapping timings in the initial
+sample; the final alternating sample's median improvement is not a separate
+demonstration of alpha/foreground-only full-export acceleration. If checker and cutout are unnecessary,
+`--outputs alpha fg` avoids two complete rendering/encoding jobs while
+preserving the requested outputs' quality.
+
+Reproduce the paired complete exports with
+`runtime/python.exe research/performance-implementation/benchmark_micro_export.py`.
+Run the component benchmark, renderer branch comparisons, original raw-logit
+comparison, actual-model hint/HDR/low-memory matrix and unit tests sequentially
+with `runtime/python.exe research/performance-implementation/verify_micro.py`.
+`micro_reference.py` loads all affected baseline modules from Git rather than
+silently comparing the optimized code against itself.
+
+Final verification: 23 unit tests pass; all 120 CUDA renderer cases match
+the pre-pass float/uint16 bits exactly; the original 4K raw-prediction golden
+still has zero changed values out of 401,080,320. The actual-model hint/HDR
+matrix passes, including a staged low-memory export followed by normal exports.
+An independent code review found no actionable correctness issues. Records:
+[micro-render-quality.json](micro-render-quality.json),
+[micro-compare.json](micro-compare.json), [matrix-results.json](matrix-results.json).
+
 ## Quality and failure validation
 
 - Float decoding matches the reference EXRs bit for bit for sRGB/Rec.709/linear and auto/full/limited input ranges.

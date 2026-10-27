@@ -100,7 +100,7 @@ def preprocess_linear_frame(linear, meta, *, need_model):
     if meta.get('preprocess_device') == 'cuda':
         return preprocess_linear_frame_cuda(linear, meta, need_model=need_model)
     linear = apply_linear_adjust(linear, meta)
-    display = np.clip(cu.linear_to_srgb(np.maximum(linear, 0.0)), 0., 1.)
+    display = np.clip(cu.linear_to_srgb_nonnegative(np.maximum(linear, 0.0)), 0., 1.)
     h, w = meta['shape_hw']
     hw = meta['model_native_hw']
     display = resize_hwc_lanczos(display, hw)

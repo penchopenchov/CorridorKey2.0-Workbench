@@ -1,0 +1,12 @@
+{
+  "label": "micro",
+  "mode": "compare",
+  "load_seconds": 18.74636529997224,
+  "export_seconds": 52.427839100011624,
+  "peak_allocated_gib": 13.078502655029297,
+  "frames": 12,
+  "changed_values": 0,
+  "max_abs": 0.0,
+  "sum_abs": 0.0,
+  "values": 401080320
+}

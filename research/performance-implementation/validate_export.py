@@ -30,7 +30,7 @@ gold=folder/'golden'
 gold.mkdir(exist_ok=True)
 original=rt._render_predictions_torch
 metrics={'frames':0,'changed_values':0,'max_abs':0.,'sum_abs':0.,'values':0}
-def render(meta,outputs,checker,logits):
+def render(meta,outputs,checker,logits,**kwargs):
     data=logits.detach().to('cpu').contiguous().view(torch.uint16).numpy()
     for a in data:
         n=metrics['frames']
@@ -45,7 +45,7 @@ def render(meta,outputs,checker,logits):
             metrics['sum_abs']+=float(delta.sum())
             metrics['values']+=delta.numel()
         metrics['frames']+=1
-    return original(meta,outputs,checker,logits)
+    return original(meta,outputs,checker,logits,**kwargs)
 if args.mode!='speed':
     rt._render_predictions_torch=render
 t=time.perf_counter()

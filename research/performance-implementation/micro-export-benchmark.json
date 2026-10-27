@@ -1,0 +1,62 @@
+{
+  "reference_revision": "f952e61cf4b4ef2b8676b3727aa9f3a72707c42c",
+  "frames": 48,
+  "resolution": [
+    3840,
+    2160
+  ],
+  "outputs": [
+    "alpha",
+    "fg",
+    "checker",
+    "cutout"
+  ],
+  "load_seconds": 18.65900690003764,
+  "runs": [
+    {
+      "implementation": "before",
+      "export_seconds": 187.67002359998878,
+      "peak_allocated_gib": 13.083995819091797,
+      "sha256": {
+        ".mp4_alpha": "894dc0399d96359e2cfbd853bb32df618c45bf4ab0f4ce4dc63000ba6de82220",
+        ".mp4_checker_comp_despill050": "e3afdb77502ea47b018496525ad2564f43dc9b01591ea5820c2e0ffce1a0e5e7",
+        ".mov_cutout": "e8400dfe79675c6ae11cefd5735f953849c39f8273157b1f169064942b8f1490",
+        ".mp4_fg": "be0aa0ecbfa9f31723df495eb8ddd8b3519974f821f38f393475d0a3a1aa95c1"
+      }
+    },
+    {
+      "implementation": "after",
+      "export_seconds": 180.92190960003063,
+      "peak_allocated_gib": 13.176856994628906,
+      "sha256": {
+        ".mp4_alpha": "894dc0399d96359e2cfbd853bb32df618c45bf4ab0f4ce4dc63000ba6de82220",
+        ".mp4_checker_comp_despill050": "e3afdb77502ea47b018496525ad2564f43dc9b01591ea5820c2e0ffce1a0e5e7",
+        ".mov_cutout": "e8400dfe79675c6ae11cefd5735f953849c39f8273157b1f169064942b8f1490",
+        ".mp4_fg": "be0aa0ecbfa9f31723df495eb8ddd8b3519974f821f38f393475d0a3a1aa95c1"
+      }
+    },
+    {
+      "implementation": "after",
+      "export_seconds": 184.99831290001748,
+      "peak_allocated_gib": 13.176856994628906,
+      "sha256": {
+        ".mp4_alpha": "894dc0399d96359e2cfbd853bb32df618c45bf4ab0f4ce4dc63000ba6de82220",
+        ".mp4_checker_comp_despill050": "e3afdb77502ea47b018496525ad2564f43dc9b01591ea5820c2e0ffce1a0e5e7",
+        ".mov_cutout": "e8400dfe79675c6ae11cefd5735f953849c39f8273157b1f169064942b8f1490",
+        ".mp4_fg": "be0aa0ecbfa9f31723df495eb8ddd8b3519974f821f38f393475d0a3a1aa95c1"
+      }
+    },
+    {
+      "implementation": "before",
+      "export_seconds": 189.71022489998722,
+      "peak_allocated_gib": 13.083702087402344,
+      "sha256": {
+        ".mp4_alpha": "894dc0399d96359e2cfbd853bb32df618c45bf4ab0f4ce4dc63000ba6de82220",
+        ".mp4_checker_comp_despill050": "e3afdb77502ea47b018496525ad2564f43dc9b01591ea5820c2e0ffce1a0e5e7",
+        ".mov_cutout": "e8400dfe79675c6ae11cefd5735f953849c39f8273157b1f169064942b8f1490",
+        ".mp4_fg": "be0aa0ecbfa9f31723df495eb8ddd8b3519974f821f38f393475d0a3a1aa95c1"
+      }
+    }
+  ],
+  "all_encoded_files_identical": true
+}

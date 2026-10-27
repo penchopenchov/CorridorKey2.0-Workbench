@@ -48,3 +48,15 @@ Each task follows failing behavior test → minimal implementation → passing s
 - Review findings fixed with red/green tests: shared-reader eviction on RVM lookahead; streamed brightness/contrast; compiler construction and fallback backend selection; writer close error/process reaping; terminal decoder error propagation.
 - Validation: 22 unit tests pass; actual-model HDR/hint/irregular-tail matrix passes; real launcher low-to-normal batch reuses exactly one model; final clean 4K runs 44.74/45.23 s versus original 86.24/85.41 s (same two video outputs, load excluded).
 - Independent review: no outstanding findings after final lifecycle fixes. No production dependencies upgraded, no merge or push performed.
+
+## Follow-up: repeated per-frame costs (2026-10-27)
+
+- User requests additional small optimizations that accumulate over long clips. Keep the same quality constraint and benchmark actual benefits.
+- User's subsequent branch instruction supersedes the original implementation-branch choice: work directly on the fork's default `master` branch. Previous work is already published there.
+- Backup before edits: `codex/backup-before-micro-optimizations-2026-10-27` at `f952e61`.
+- Measure frozen `f952e61` against candidate exact positive-only sRGB arithmetic, reused despill results, and a per-export GPU checker background. Leave signed EXR conversion and encoder settings intact.
+- Validate CPU/CUDA transfer knees and signed zero, all renderer branches including HDR/linear cutout, real-model raw predictions, and staged low-memory placement. Run paired full exports and compare encoded files. Keep measured improvements only.
+- Request independent read-only review, resolve findings, rerun verification, document results, commit and push fork `master`.
+- Result: exact nonnegative transfer, shared despill and cached checker implemented. Alternating component benchmark: CPU preprocessing 864.34 → 713.76 ms; all-four render/download 139.65 → 117.03 ms medians.
+- Full export: before 187.67/189.71 s, after 180.92/185.00 s, 48 frames at 4K with all four outputs; mean time reduced 3.04%. All encoded files have identical SHA-256 hashes. No encoder/model/temporal quality changes.
+- Verification complete: 23 unit tests; 120 exact CUDA renderer cases; zero changed original raw values out of 401,080,320; actual-model low-memory/HDR/hint matrix passes. Independent review reports no actionable findings. Results and reproduction scripts are ready for publication directly to fork `master`.

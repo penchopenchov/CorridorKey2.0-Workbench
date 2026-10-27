@@ -299,7 +299,7 @@ def _read_frame_dir_views(path: str, *, exr_linear: bool):
     raw = read_image_rgb(path)
     if exr_linear:
         linear = raw.astype(np.float32, copy=False)
-        display = np.clip(cu.linear_to_srgb(np.maximum(linear, 0.0)), 0.0, 1.0)
+        display = np.clip(cu.linear_to_srgb_nonnegative(np.maximum(linear, 0.0)), 0.0, 1.0)
     else:
         display = np.clip(raw.astype(np.float32, copy=False), 0.0, 1.0)
         linear = cu.srgb_to_linear(display)

@@ -728,7 +728,8 @@ def _chw_to_bgra_f32_cpu(rgb: torch.Tensor, alpha: torch.Tensor) -> np.ndarray:
 
 def _render_predictions_exr_torch(meta: dict, outputs: set[str],
                                   checker: torch.Tensor,
-                                  logits: torch.Tensor) -> dict[str, np.ndarray]:
+                                  logits: torch.Tensor, *,
+                                  checker_linear: torch.Tensor | None = None) -> dict[str, np.ndarray]:
     """Render a stage-2 batch as unclamped scene-linear float32 NHWC arrays.
 
     HDR contract: `fg`, `cutout`, and `checker` color stays in decoded linear
@@ -755,24 +756,24 @@ def _render_predictions_exr_torch(meta: dict, outputs: set[str],
     pf_linear = _resize_output_torch(pf_linear, meta)
     if "fg" in outputs:
         rendered["fg"] = _chw_to_bgr_f32_cpu(pf_linear)
-    if "cutout" in outputs:
+    if outputs & {"cutout", "checker"}:
         pf_linear_despilled = _despill_average_srgb_torch(
             pf_linear, strength=despill_strength)
+    if "cutout" in outputs:
         rendered["cutout"] = _chw_to_bgra_f32_cpu(pf_linear_despilled, pa)
     if "checker" in outputs:
-        checker_b = checker.to(device=pf_linear.device,
-                               dtype=pf_linear.dtype).unsqueeze(0)
-        bg_lin = cu.srgb_to_linear(checker_b)
-        pf_despill = _despill_average_srgb_torch(
-            pf_linear, strength=despill_strength)
-        comp_lin = pf_despill * pa + bg_lin * (1.0 - pa)
+        bg_lin = checker_linear
+        if bg_lin is None:
+            bg_lin = cu.srgb_to_linear(checker.to(pf_linear).unsqueeze(0))
+        comp_lin = pf_linear_despilled * pa + bg_lin * (1.0 - pa)
         rendered["checker"] = _chw_to_bgr_f32_cpu(comp_lin)
     return rendered
 
 
 def _render_predictions_torch(meta: dict, outputs: set[str],
                               checker: torch.Tensor,
-                              logits: torch.Tensor) -> dict[str, np.ndarray]:
+                              logits: torch.Tensor, *,
+                              checker_linear: torch.Tensor | None = None) -> dict[str, np.ndarray]:
     """Render a stage-2 batch on GPU, returning uint16 BGR/BGRA NHWC arrays.
 
     This removes the previous per-frame numpy HDR decode, sRGB encode,
@@ -793,25 +794,26 @@ def _render_predictions_torch(meta: dict, outputs: set[str],
     pf_model = _crop_native_torch(fg_model, meta)
     pf_linear = _linear_adjust_inverse_torch(cu.asinh_to_linear(pf_model), meta)
     pf_linear_pos = pf_linear.clamp(min=0.0)
-    pf = _resize_output_torch(cu.linear_to_srgb(pf_linear_pos), meta).clamp(0.0, 1.0)
+    pf = _resize_output_torch(cu.linear_to_srgb_nonnegative(pf_linear_pos), meta).clamp(0.0, 1.0)
     if "fg" in outputs:
         rendered["fg"] = _srgb_to_bgr_uint16_cpu(pf)
+    if "checker" in outputs or ("cutout" in outputs and not meta.get("cutout_linear", False)):
+        pf_despill = _despill_average_srgb_torch(pf, strength=despill_strength)
     if "cutout" in outputs:
-        pf_linear_despilled = _despill_average_srgb_torch(pf_linear_pos, strength=despill_strength)
         if meta.get("cutout_linear", False):
+            pf_linear_despilled = _despill_average_srgb_torch(pf_linear_pos, strength=despill_strength)
             pf_linear_despilled_resized = _resize_output_torch(pf_linear_despilled, meta).clamp(0.0, 1.0)
             rendered["cutout"] = _srgb_to_bgra_uint16_cpu(pf_linear_despilled_resized, pa)
         else:
-            pf_despill = _despill_average_srgb_torch(pf, strength=despill_strength)
             rendered["cutout"] = _srgb_to_bgra_uint16_cpu(pf_despill, pa)
     if "checker" in outputs:
-        checker_b = checker.to(device=pf.device, dtype=pf.dtype).unsqueeze(0)
-        bg_lin = cu.srgb_to_linear(checker_b)
+        bg_lin = checker_linear
+        if bg_lin is None:
+            bg_lin = cu.srgb_to_linear(checker.to(pf).unsqueeze(0))
         alpha = pa
-        pf_despill = _despill_average_srgb_torch(pf, strength=despill_strength)
         comp_despill_lin = (
             cu.srgb_to_linear(pf_despill) * alpha + bg_lin * (1.0 - alpha))
-        comp_despill = cu.linear_to_srgb(
+        comp_despill = cu.linear_to_srgb_nonnegative(
             comp_despill_lin.clamp(min=0.0)).clamp(0.0, 1.0)
         rendered["checker"] = _srgb_to_bgr_uint16_cpu(comp_despill)
     return rendered
@@ -867,8 +869,8 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
     meta["despill_strength"] = cfg.despill_strength
     fps = float(meta["native_fps"])
     clip_name = raw_clip_name(input_path)
-    checker = make_checker(H_out, W_out)
-    checker_t = torch.from_numpy(checker)
+    checker_t = (torch.from_numpy(make_checker(H_out, W_out))
+                 if "checker" in cfg.outputs else None)
     writers = {}
     suffix = {
         "alpha": "alpha",
@@ -972,9 +974,14 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
                 torch.cuda.empty_cache()
 
         stage2_batch = max(1, int(cfg.stage2_batch))
+        checker_linear = None
 
         def write_prediction_batches(items):
+            nonlocal checker_linear
             device = next(model.stage2.parameters()).device
+            # Initialize after phase-2 placement, including staged low-memory jobs.
+            if checker_t is not None and checker_linear is None:
+                checker_linear = cu.srgb_to_linear(checker_t.to(device)).unsqueeze(0)
             for offset in range(0, len(items), stage2_batch):
                 sub = items[offset:offset + stage2_batch]
                 rgb_t = torch.stack([item[2] for item in sub], dim=0)
@@ -992,7 +999,7 @@ def run_inference(model, input_path: str, output_dir: str, cfg: InferenceConfig,
                         logits = logits[0]
                 render_fn = (_render_predictions_exr_torch if use_exr
                              else _render_predictions_torch)
-                rendered = render_fn(meta, cfg.outputs, checker_t, logits[0])
+                rendered = render_fn(meta, cfg.outputs, checker_t, logits[0], checker_linear=checker_linear)
                 for name, frames in rendered.items():
                     writers[name].write_many(frames)
                 del logits, baton_t, rgb_t, baton_np, rendered

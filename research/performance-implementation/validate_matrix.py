@@ -23,9 +23,9 @@ for j in range(13):
 model=rt.load_model(rt.RuntimePaths.from_package(ROOT),device='cuda')
 original=rt._render_predictions_exr_torch
 collected=[]
-def capture(meta,outputs,checker,logits):
+def capture(meta,outputs,checker,logits,**kwargs):
     collected.extend(x.detach().cpu().clone() for x in logits)
-    return original(meta,outputs,checker,logits)
+    return original(meta,outputs,checker,logits,**kwargs)
 rt._render_predictions_exr_torch=capture
 results=[]
 writer=rt.WriterConfig(ffmpeg_bin=str(ROOT/'ffmpeg.exe'))

@@ -1,0 +1,1279 @@
+{
+  "reference_revision": "f952e61cf4b4ef2b8676b3727aa9f3a72707c42c",
+  "cases": 120,
+  "all_bit_exact": true,
+  "records": [
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 0.5,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": false,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "video",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "cutout"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "checker"
+      ],
+      "cached": true,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": false,
+      "bit_exact": true
+    },
+    {
+      "strength": 1.0,
+      "cutout_linear": true,
+      "format": "exr",
+      "outputs": [
+        "alpha",
+        "checker",
+        "cutout",
+        "fg"
+      ],
+      "cached": true,
+      "bit_exact": true
+    }
+  ]
+}

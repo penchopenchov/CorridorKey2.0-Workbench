@@ -61,6 +61,21 @@ def linear_to_srgb(x):
     return t.numpy()
 
 
+def linear_to_srgb_nonnegative(x):
+    """Exact positive branch of linear_to_srgb for already nonnegative inputs.
+
+    Keep the same operation order and threshold; skipping the unused negative
+    branch reduces full-frame allocations in inference. Signed/HDR callers
+    must continue to use linear_to_srgb unless they first clamp at zero.
+    """
+    t = x if _is_tensor(x) else torch.from_numpy(x)
+    # Retain the reference clamp's signed-zero behavior on both CPU and CUDA.
+    t = t.clamp(min=0.0)
+    pos_pow = t.clamp(min=0.0031308).pow(1.0 / 2.4)
+    result = torch.where(t <= 0.0031308, t * 12.92, 1.055 * pos_pow - 0.055)
+    return result if _is_tensor(x) else result.numpy()
+
+
 def srgb_to_linear(x):
     """sRGB → Scene-linear RGB (IEC 61966-2-1). Numpy or torch input.
 
@@ -130,12 +145,12 @@ def asinh_to_linear(y, knee=HDR_ASINH_KNEE, ref=HDR_ASINH_REF):
 
 def linear_to_vfm_sdr(x):
     """Tone-limited proxy for foundation models that expect SDR RGB [0, 1]."""
-    return np.clip(linear_to_srgb(np.maximum(x, 0.0)), 0.0, 1.0)
+    return np.clip(linear_to_srgb_nonnegative(np.maximum(x, 0.0)), 0.0, 1.0)
 
 
 def linear_to_vfm_sdr_torch(x):
     """Torch version of `linear_to_vfm_sdr`."""
-    return linear_to_srgb(x.clamp(min=0.0)).clamp(0.0, 1.0)
+    return linear_to_srgb_nonnegative(x.clamp(min=0.0)).clamp(0.0, 1.0)
 
 def premultiply(fg, alpha):
     """
